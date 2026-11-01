@@ -25,7 +25,7 @@ const SectionHeading = ({
       {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
       <Heading as="h2" size="large">{children}</Heading>
       {description ? (
-        <p className="m-0 max-w-3xl text-pretty text-base leading-7 text-muted sm:text-lg sm:leading-8">
+        <p className="type-lead text-pretty">
           {description}
         </p>
       ) : null}

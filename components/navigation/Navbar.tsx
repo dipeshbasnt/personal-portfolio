@@ -29,7 +29,7 @@ const Navbar = () => {
               alt=""
               className="hero-navbar-logo-image"
               height={36}
-              src="https://images.unsplash.com/photo-1557683316-973673baf926?w=144&h=144&fit=crop"
+              src="/logo.png"
               unoptimized
               width={36}
             />

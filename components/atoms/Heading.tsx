@@ -25,7 +25,7 @@ const fonts: Record<HeadingFont, string> = {
 };
 
 const Heading = ({ as: Tag = "h2", font = "heading", size = "large", className, ...props }: HeadingProps) => (
-  <Tag className={cn("m-0 text-balance text-ink", fonts[font], sizes[size], className)} {...props} />
+  <Tag className={cn("type-heading m-0 text-balance", fonts[font], sizes[size], className)} {...props} />
 );
 
 export default Heading;
