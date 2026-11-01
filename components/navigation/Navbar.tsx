@@ -76,7 +76,7 @@ const Navbar = () => {
           {heroContent.contactAction}
           <svg
             aria-hidden="true"
-            className="size-4"
+            className="hero-navbar-contact-icon size-4"
             fill="none"
             viewBox="0 0 24 24"
           >

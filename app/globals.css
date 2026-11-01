@@ -155,7 +155,7 @@ textarea[aria-invalid="true"]:focus-visible {
 .hero-navbar {
   position: fixed;
   z-index: 50;
-  top: 24px;
+  top: 0;
   left: 50%;
   width: min(100% - 24px, var(--container-max));
   transform: translateX(-50%);
@@ -169,12 +169,12 @@ textarea[aria-invalid="true"]:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding-inline: 80px;
-  border: 1px solid rgb(7 17 31 / 6%);
+  padding: 20px;
+  border: 1px solid rgb(7 17 31 / 8%);
   border-radius: 9999px;
-  background: rgb(255 254 250 / 78%);
-  box-shadow: 0 10px 24px rgb(7 17 31 / 8%);
-  backdrop-filter: blur(12px);
+  background: var(--color-surface);
+  box-shadow: 0 8px 20px rgb(7 17 31 / 7%);
+  backdrop-filter: none;
 }
 
 /* Brand */
@@ -225,13 +225,32 @@ textarea[aria-invalid="true"]:focus-visible {
 /* Contact and mobile menu controls */
 
 .hero-navbar-contact {
-  width: 154px;
-  height: 44px;
+  width: auto;
+  min-width: 144px;
+  min-height: 48px;
   flex-shrink: 0;
   justify-content: center;
-  padding: 0;
-  border-radius: 9999px;
-  box-shadow: 0 8px 18px rgb(240 68 36 / 18%);
+  gap: 8px;
+  padding: 0 16px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgb(240 68 36 / 18%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.hero-navbar-contact:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 20px rgb(240 68 36 / 24%);
+}
+
+.hero-navbar-contact-icon {
+  transition: transform 180ms ease;
+}
+
+.hero-navbar-contact:hover .hero-navbar-contact-icon {
+  transform: translate(2px, -2px);
 }
 
 .hero-navbar-mobile-contact,
@@ -243,7 +262,7 @@ textarea[aria-invalid="true"]:focus-visible {
 
 @media (max-width: 1100px) {
   .hero-navbar-container {
-    padding-inline: 40px;
+    padding: 16px;
     gap: 16px;
   }
 
@@ -265,7 +284,8 @@ textarea[aria-invalid="true"]:focus-visible {
   }
 
   .hero-navbar-contact {
-    width: 120px;
+    min-width: 120px;
+    padding-inline: 16px;
     font-size: 16px;
   }
 }
@@ -274,13 +294,13 @@ textarea[aria-invalid="true"]:focus-visible {
 
 @media (max-width: 900px) {
   .hero-navbar {
-    top: 16px;
+    top: 0;
     width: min(100% - 16px, var(--container-max));
   }
 
   .hero-navbar-container {
-    min-height: 44px;
-    padding-inline: 20px;
+    min-height: 64px;
+    padding: 12px;
     gap: 12px;
   }
 
@@ -338,7 +358,7 @@ textarea[aria-invalid="true"]:focus-visible {
     gap: 8px;
     padding: 20px;
     border: 1px solid var(--color-border-subtle);
-    border-radius: 12px;
+    border-radius: 16px;
     background: var(--color-surface);
     box-shadow: var(--shadow-1);
     white-space: normal;
@@ -363,6 +383,8 @@ textarea[aria-invalid="true"]:focus-visible {
     width: 100%;
     min-height: 44px;
     justify-content: center;
+    padding-inline: 16px;
+    border-radius: var(--radius-control);
     font-size: 16px;
   }
 }
@@ -751,13 +773,13 @@ textarea[aria-invalid="true"]:focus-visible {
 
   .hero-portrait {
     position: relative;
-    top: 100px;
+    top: 0;
     left: auto;
     width: min(58vw, 420px);
     height: clamp(300px, 45vw, 400px);
     min-width: 0;
     min-height: 0;
-    margin: 0 auto 48px;
+    margin: 100px auto 48px;
     transform: none;
   }
 
@@ -832,9 +854,10 @@ textarea[aria-invalid="true"]:focus-visible {
   }
 
   .hero-portrait {
-    top: 76px;
+    top: 0;
     width: min(78vw, 320px);
     height: clamp(250px, 68vw, 320px);
+    margin-top: 76px;
     margin-bottom: 32px;
   }
 
