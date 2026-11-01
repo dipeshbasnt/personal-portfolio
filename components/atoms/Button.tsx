@@ -1,0 +1,45 @@
+import Link from "next/link";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "@/lib/utils";
+
+type ButtonVariant = "primary" | "secondary" | "outline";
+type ButtonSize = "default" | "small" | "icon";
+
+type SharedProps = {
+  children: ReactNode;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+};
+
+type LinkButtonProps = SharedProps & AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+type NativeButtonProps = SharedProps & ButtonHTMLAttributes<HTMLButtonElement> & { href?: never };
+type ButtonProps = LinkButtonProps | NativeButtonProps;
+
+const variants: Record<ButtonVariant, string> = {
+  primary: "bg-ink text-white hover:bg-accent",
+  secondary: "bg-accent-bright text-white hover:bg-accent-strong",
+  outline: "border border-default text-ink hover:bg-surface",
+};
+
+const sizes: Record<ButtonSize, string> = {
+  default: "min-h-12 px-6 py-3 text-xl sm:min-h-14 sm:px-7",
+  small: "min-h-11 px-4 py-2 text-nav",
+  icon: "size-11 p-0",
+};
+
+const baseStyles = "focus-ring inline-flex w-fit items-center justify-center gap-3 rounded-pill font-semibold transition-colors duration-200";
+
+const Button = (props: ButtonProps) => {
+  const { href, children, variant = "primary", size = "default", className, ...rest } = props;
+  const classNames = cn(baseStyles, variants[variant], sizes[size], className);
+
+  if (href) {
+    return <Link className={classNames} href={href} {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}>{children}</Link>;
+  }
+
+  const buttonProps = rest as ButtonHTMLAttributes<HTMLButtonElement>;
+  return <button className={classNames} {...buttonProps} type={buttonProps.type ?? "button"}>{children}</button>;
+};
+
+export default Button;

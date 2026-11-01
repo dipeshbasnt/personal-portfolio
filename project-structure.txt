@@ -1,0 +1,84 @@
+.
+├── AGENTS.md
+├── app
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components
+│   ├── Animation
+│   ├── atoms
+│   │   ├── Button.tsx
+│   │   ├── Container.tsx
+│   │   ├── Eyebrow.tsx
+│   │   ├── Heading.tsx
+│   │   ├── IconLink.tsx
+│   │   ├── index.ts
+│   │   ├── Input.tsx
+│   │   ├── Logo.tsx
+│   │   ├── NavLink.tsx
+│   │   ├── Tag.tsx
+│   │   └── Textarea.tsx
+│   ├── hooks
+│   ├── navigation
+│   │   ├── Footer.tsx
+│   │   ├── Navbar.tsx
+│   │   └── rules.md
+│   ├── organisms
+│   │   ├── SectionHeading.tsx
+│   │   └── SplitHero.tsx
+│   ├── providers
+│   └── sections
+│       ├── about
+│       │   └── AboutSection.tsx
+│       ├── beyond-work
+│       │   └── BeyondWorkSection.tsx
+│       ├── contact
+│       │   └── ContactSection.tsx
+│       ├── featured-work
+│       │   └── FeaturedWorkSection.tsx
+│       ├── hero
+│       │   ├── HeroCharacter.tsx
+│       │   ├── HeroSection.tsx
+│       │   └── HeroStats.tsx
+│       ├── journey
+│       │   └── JourneyEducationSection.tsx
+│       ├── process
+│       │   └── ProcessSection.tsx
+│       ├── projects
+│       │   └── ProjectsSection.tsx
+│       ├── services
+│       │   └── ServicesSection.tsx
+│       ├── skills
+│       │   └── SkillsSection.tsx
+│       └── testimonials
+│           └── TestimonialsSection.tsx
+├── data
+│   └── portfolio.ts
+├── decision.md
+├── design.md
+├── DESIGN.md
+├── eslint.config.mjs
+├── lib
+│   └── utils.ts
+├── memory.md
+├── next.config.ts
+├── next-env.d.ts
+├── package.json
+├── package-lock.json
+├── project-structure.txt
+├── project-structure.txt~
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── icons
+│   ├── images
+│   │   └── character.PNG
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── tsconfig.json
+└── tsconfig.tsbuildinfo
+
+26 directories, 56 files
