@@ -31,7 +31,7 @@ const AboutSection = () => (
               <header className="about-header">
                 <Eyebrow>{aboutContent.eyebrow}</Eyebrow>
                 <Heading
-                  className="about-title"
+                  className="about-title section-title"
                   id="about-title"
                   size="large"
                 >

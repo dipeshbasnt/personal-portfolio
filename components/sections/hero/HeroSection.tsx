@@ -5,7 +5,6 @@ import Button from "@/components/atoms/Button";
 import Eyebrow from "@/components/atoms/Eyebrow";
 import Heading from "@/components/atoms/Heading";
 import Container from "@/components/atoms/Container";
-import Navbar from "@/components/navigation/Navbar";
 import HeroCharacter from "@/components/sections/hero/HeroCharacter";
 import HeroStats from "@/components/sections/hero/HeroStats";
 import { characterImage, heroContent } from "@/data/portfolio";
@@ -35,8 +34,6 @@ const HeroSection = ({ isLoaded = true }: HeroSectionProps) => {
           />
 
           <div className="hero-content-layout">
-            <Navbar />
-
             <Container className="hero-copy">
               <div className="hero-role">
                 <span aria-hidden="true" className="hero-role-line" />
@@ -54,8 +51,8 @@ const HeroSection = ({ isLoaded = true }: HeroSectionProps) => {
               >
                 {heroContent.titleLines.map((line) => (
                   <span key={line}>
-                    {line}
-                    <br />
+                    {line}{" "}
+                    <br className="hero-title-break" />
                   </span>
                 ))}
                 <span className="hero-title-accent">

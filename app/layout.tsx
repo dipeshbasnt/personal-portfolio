@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { Caveat, Inter, JetBrains_Mono, Luckiest_Guy, Manrope, Roboto } from "next/font/google";
+import { Caveat, Inter, JetBrains_Mono, Luckiest_Guy } from "next/font/google";
+import Footer from "@/components/navigation/Footer";
+import Navbar from "@/components/navigation/Navbar";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,12 +9,6 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-});
-
-const roboto = Roboto({ variable: "--font-roboto", subsets: ["latin"] });
 const jetBrainsMono = JetBrains_Mono({ variable: "--font-jetbrains-mono", subsets: ["latin"] });
 const luckiestGuy = Luckiest_Guy({ variable: "--font-luckiest-guy", weight: "400", subsets: ["latin"] });
 const caveat = Caveat({ variable: "--font-caveat", subsets: ["latin"] });
@@ -26,9 +22,13 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: LayoutProps<"/">) => (
   <html
     lang="en"
-    className={`${inter.variable} ${manrope.variable} ${roboto.variable} ${jetBrainsMono.variable} ${luckiestGuy.variable} ${caveat.variable} h-full antialiased`}
+    className={`${inter.variable} ${jetBrainsMono.variable} ${luckiestGuy.variable} ${caveat.variable} h-full antialiased`}
   >
-    <body className="min-h-full flex flex-col">{children}</body>
+    <body className="min-h-full flex flex-col">
+      <Navbar />
+      {children}
+      <Footer />
+    </body>
   </html>
 );
 

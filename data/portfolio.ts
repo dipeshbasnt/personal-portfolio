@@ -50,8 +50,8 @@ export const characterImage = "/images/character.PNG";
 
 export const aboutContent = {
   eyebrow: "About me",
-  titleLead: "Turning Ideas Into",
-  titleAccent: "Meaningful Digital Experiences.",
+  titleLead: "Turning ideas into",
+  titleAccent: "meaningful digital experiences.",
   summary:
     "Bridging the gap between human-centered UI/UX design and modern frontend engineering.",
   biography: [
@@ -163,3 +163,92 @@ export const services = [
     imageAlt: "Laptop displaying code in a bright development workspace",
   },
 ] as const;
+export const featuredWorkContent = {
+  eyebrow: "FEATURED WORK",
+  title: "Turning ideas into clean, functional and meaningful digital products.",
+  summary:
+    "A selected project where I worked on the complete product experience — from research and design to development and launch.",
+  ctaLabel: "View case study",
+  ctaUrl: "#",
+  project: {
+    title: "RatoPandaDigitals",
+    tags: "FIGMA DESIGN · REACT · NEXT.JS",
+    description:
+      "An agency portfolio website designed in Figma and built with React and Next.js—my first complete Figma-to-code project.",
+    imageSrc: "/images/featured-work.png",
+    imageAlt: "RatoPandaDigitals agency portfolio website showcase",
+  },
+} as const;
+
+export const projectsContent = {
+  eyebrow: "MY WORK",
+  title: "A collection of projects where design meets function.",
+  summary:
+    "Here are some of the projects I've worked on this from concept to clean, usable interfaces.",
+  viewAllLabel: "View all projects",
+  viewAllUrl: "/projects",
+  projects: [
+    {
+      id: "freshbite",
+      title: "FreshBite",
+      description: "FreshBite is a restaurant and café ordering app where users can explore dishes, check menus, place quick orders, and track their delivery live. The goal was to create a clean and easy interface that helps users order without confusion.",
+      tags: "MOBILE APP · UI/UX DESIGN · 2025",
+      imageSrc: "/images/Freshbite.png",
+      imageAlt: "FreshBite mobile app design showcase",
+      link: "#",
+    },
+    {
+      id: "thriftstore",
+      title: "Thriftstore",
+      description: "Thriftstore is an e-commerce platform for buying and selling second-hand clothing and accessories. The goal was to create a user-friendly interface that makes it easy for users to find unique items while providing a seamless shopping experience.",
+      tags: "MOBILE APP · UI/UX DESIGN · 2025",
+      imageSrc: "/images/Thriftstore.png",
+      imageAlt: "Thriftstore e-commerce app project preview",
+      link: "#",
+    },
+    {
+      id: "freshsip",
+      title: "freshsip",
+      description: "FreshSip is a vibrant, health-focused landing page designed to provide a seamless user experience for a premium juice bar. This project explores high-energy branding, glass-morphism, and advanced Figma prototyping",
+      tags: "BRANDING · VISUAL DESIGN · 2024",
+      imageSrc: "/images/freshsip.png",
+      imageAlt: "freshsip visual design and branding showcase",
+      link: "#",
+    },
+  ],
+} as const;
+
+export const footerContent = {
+  brand: "RabbitTheDesigner",
+  copyright: `© ${new Date().getFullYear()} RabbitTheDesigner. All rights reserved.`,
+  navLinks: [
+    { label: "Home", href: "#" },
+    { label: "About", href: "#about" },
+    { label: "Services", href: "#services" },
+    { label: "Work", href: "#work" },
+    { label: "Contact", href: "#contact" },
+  ],
+  socials: [
+    { label: "Instagram", href: "https://instagram.com" },
+    { label: "Dribbble", href: "https://dribbble.com" },
+    { label: "LinkedIn", href: "https://linkedin.com" },
+    { label: "X (Twitter)", href: "https://x.com" },
+  ],
+} as const;
+
+export const contactContent = {
+  title: "LET'S WORK TOGETHER",
+  cardTitle: "Ready to start\nyour project?",
+  cardDescription:
+    "Share your goals and timeline, and I’ll send a tailored proposal.",
+  ctaLabel: "GET IN TOUCH",
+  submitLabel: "SEND MESSAGE",
+  fields: {
+    nameLabel: "Name",
+    namePlaceholder: "Enter your full name",
+    emailLabel: "Email",
+    emailPlaceholder: "Enter your email address",
+    messageLabel: "Message",
+    messagePlaceholder: "Tell me about your project...",
+  },
+} as const;
