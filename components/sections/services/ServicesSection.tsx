@@ -4,6 +4,7 @@ import Button from "@/components/atoms/Button";
 import Container from "@/components/atoms/Container";
 import Eyebrow from "@/components/atoms/Eyebrow";
 import { services } from "@/data/portfolio";
+import ScrollImageReveal from "@/components/smoothui/ScrollImageReveal";
 
 const ServicesSection = () => (
   <section
@@ -51,21 +52,47 @@ const ServicesSection = () => (
           {services.map((service, index) => (
             <li key={service.title}>
               <article className="service-card">
-                <div className="service-card-image-wrap">
-                  <Image
-                    alt={service.imageAlt}
-                    className="service-card-image"
-                    fill
-                    sizes="(max-width: 600px) 90vw, (max-width: 900px) 80vw, 40vw"
-                    src={service.image}
-                    unoptimized
-                  />
+
+
+
+
+
+
+
+                  <div className="service-card-image-wrap">
+                  <ScrollImageReveal
+                    mask="wipe"
+                    direction="right"
+                    once={true}
+                    delay={index * 0.2}
+                    className="w-full h-full"
+                  >
+                    <Image
+                      alt={service.imageAlt}
+                      className="service-card-image"
+                      fill
+                      sizes="(max-width: 600px) 90vw, (max-width: 900px) 80vw, 40vw"
+                      src={service.image}
+                    />
+                  </ScrollImageReveal>
                 </div>
                 <div className="service-card-content">
                   <div className="service-card-meta">
                     <span>{service.category}</span>
                     <span>0{index + 1} / 0{services.length}</span>
                   </div>
+
+
+
+
+
+
+
+
+
+
+
+
                   <h3>{service.title}</h3>
                   <p>{service.description}</p>
                   <div aria-hidden="true" className="service-card-markers">
@@ -73,6 +100,7 @@ const ServicesSection = () => (
                     <span />
                     <span />
                   </div>
+
                 </div>
               </article>
             </li>

@@ -2,7 +2,8 @@
 
 import Container from "@/components/atoms/Container";
 import { footerContent } from "@/data/portfolio";
-import { ArrowUp, Star } from "lucide-react";
+import Image from "next/image";
+import { ArrowUp } from "lucide-react";
 import { FaDribbble, FaInstagram, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 
 const socialIcons = [FaInstagram, FaDribbble, FaLinkedin, FaXTwitter];
@@ -20,9 +21,7 @@ const Footer = () => {
           {/* Brand & Copyright */}
           <div className="footer-brand-wrap flex flex-col items-center lg:items-start gap-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center text-white shrink-0">
-                <Star aria-hidden="true" className="w-5 h-5 fill-white stroke-white" />
-              </div>
+              <Image alt="" className="h-10 w-10 shrink-0 object-contain" height={40} src="/logo.png" unoptimized width={40} />
               <span className="text-slate-950 text-xl font-bold tracking-tight">
                 {footerContent.brand}
               </span>

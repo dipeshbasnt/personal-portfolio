@@ -3,6 +3,7 @@ export { default as Container } from "@/components/atoms/Container";
 export { default as Eyebrow } from "@/components/atoms/Eyebrow";
 export { default as Heading } from "@/components/atoms/Heading";
 export { default as IconLink } from "@/components/atoms/IconLink";
+export { default as FloatInput } from "@/components/atoms/FloatInput";
 export { default as Input } from "@/components/atoms/Input";
 export { default as Logo } from "@/components/atoms/Logo";
 export { default as NavLink } from "@/components/atoms/NavLink";

@@ -28,10 +28,10 @@ const Navbar = () => {
             <Image
               alt=""
               className="hero-navbar-logo-image"
-              height={36}
+              height={44}
               src="/logo.png"
               unoptimized
-              width={36}
+              width={44}
             />
           }
         >

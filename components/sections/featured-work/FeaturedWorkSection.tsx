@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Button from "@/components/atoms/Button";
+import ScrollImageReveal from "@/components/smoothui/ScrollImageReveal";
 import Container from "@/components/atoms/Container";
 import Eyebrow from "@/components/atoms/Eyebrow";
 import Heading from "@/components/atoms/Heading";
@@ -50,13 +50,12 @@ const FeaturedWorkSection = () => (
         <div className="featured-work-card bg-stone-100 rounded-[24px] p-6 sm:p-10 border border-stone-300 flex flex-col gap-10">
           {/* Media Container */}
           <div className="featured-work-media relative aspect-[1150/599] w-full rounded-[20px] overflow-hidden border border-stone-300 shadow-[0px_4px_16px_0px_rgba(24,35,43,0.03)]">
-            <Image
+            <ScrollImageReveal
               alt={featuredWorkContent.project.imageAlt}
-              className="object-cover object-top"
-              fill
-              priority
-              sizes="(max-width: 1280px) 100vw, 1280px"
               src={featuredWorkContent.project.imageSrc}
+              sizes="(max-width: 768px) 100vw, 90vw"
+              mask="circle"
+              className="w-full h-full"
             />
           </div>
 

@@ -23,12 +23,12 @@ const variants: Record<ButtonVariant, string> = {
 };
 
 const sizes: Record<ButtonSize, string> = {
-  default: "min-h-12 px-6 py-3 text-xl sm:min-h-14 sm:px-7",
-  small: "min-h-11 px-4 py-2 text-nav",
+  default: "min-h-12 px-4 py-3.5 text-xl sm:min-h-14 sm:px-4",
+  small: "min-h-11 px-4 py-2.5 text-[length:var(--text-nav)]",
   icon: "size-11 p-0",
 };
 
-const baseStyles = "focus-ring inline-flex w-fit items-center justify-center gap-3 rounded-pill font-semibold transition-colors duration-200";
+const baseStyles = "focus-ring inline-flex w-fit items-center justify-center gap-2 rounded-pill font-medium transition-colors duration-200";
 
 const Button = (props: ButtonProps) => {
   const { href, children, variant = "primary", size = "default", className, ...rest } = props;

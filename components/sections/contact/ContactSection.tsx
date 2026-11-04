@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Container from "@/components/atoms/Container";
+import { FloatInput } from "@/components/atoms";
 import { contactContent } from "@/data/portfolio";
 import { Send } from "lucide-react";
 
@@ -47,43 +48,25 @@ const ContactSection = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Name Input */}
                   <div className="flex flex-col gap-2">
-                    <label
-                      className="text-slate-950 text-base font-normal"
-                      htmlFor="contact-name"
-                    >
-                      {contactContent.fields.nameLabel}
-                    </label>
-                    <input
-                      className="w-full h-10 px-4 py-2 bg-white rounded-lg border border-stone-300 text-slate-950 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-950 transition-all"
-                      id="contact-name"
-                      name="name"
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                    <FloatInput
+                      label={contactContent.fields.nameLabel}
                       placeholder={contactContent.fields.namePlaceholder}
-                      type="text"
                       value={formData.name}
+                      onChange={(value) =>
+                        setFormData({ ...formData, name: value })
+                      }
                     />
                   </div>
 
                   {/* Email Input */}
                   <div className="flex flex-col gap-2">
-                    <label
-                      className="text-slate-950 text-base font-normal"
-                      htmlFor="contact-email"
-                    >
-                      {contactContent.fields.emailLabel}
-                    </label>
-                    <input
-                      className="w-full h-10 px-4 py-2 bg-white rounded-lg border border-stone-300 text-slate-950 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-950 transition-all"
-                      id="contact-email"
-                      name="email"
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
+                    <FloatInput
+                      label={contactContent.fields.emailLabel}
                       placeholder={contactContent.fields.emailPlaceholder}
-                      type="email"
                       value={formData.email}
+                      onChange={(value) =>
+                        setFormData({ ...formData, email: value })
+                      }
                     />
                   </div>
                 </div>
