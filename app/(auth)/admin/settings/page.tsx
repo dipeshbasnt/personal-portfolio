@@ -1,102 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import AdminSidebar from "@/components/admin/ui/AdminSidebar";
-import AdminHeader from "@/components/admin/ui/AdminHeader";
-import AdminStatCard from "@/components/admin/ui/AdminStatCard";
-import AdminLogoutModal from "@/components/admin/ui/AdminLogoutModal";
-import { useEnquiries } from "@/hooks/useEnquiries";
-import { enquiriesClientRepository } from "@/services/enquiries/client";
-import { signOut } from "@/actions/auth";
-import { Mail, TrendingUp, CheckCircle2, Settings } from "lucide-react";
+import Link from "next/link";
+import { Settings } from "lucide-react";
 
 export default function AdminSettingsPage() {
-  const [stats, setStats] = useState<{ total: number; new: number; read: number } | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-
-  const { data: enquiries = [], loading } = useEnquiries();
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const s = await enquiriesClientRepository.getStats();
-        setStats(s);
-      } catch (err) {
-        if (process.env.NODE_ENV === "development") console.error("Failed to fetch stats:", err);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  const handleLogoutConfirm = async () => {
-    setLogoutModalOpen(false);
-    await signOut();
-  };
-
-  const totalCount = stats?.total ?? (loading ? 0 : enquiries.length);
-  const unreadCount = stats?.new ?? enquiries.filter((e) => !e.read).length;
-  const readCount = stats?.read ?? enquiries.filter((e) => e.read).length;
-
   return (
-    <div className="min-h-screen bg-stone-50 relative">
-      <AdminSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        isCollapsed={isCollapsed}
-        onCollapse={() => setIsCollapsed((prev) => !prev)}
-      />
-
-      <div className="relative">
-        <main className={`transition-margin duration-300 min-h-screen ${
-          isCollapsed ? 'lg:ml-20' : 'lg:ml-64'
-        }`}>
-          <AdminHeader
-            onMenuToggle={() => setSidebarOpen((prev) => !prev)}
-            onLogout={() => setLogoutModalOpen(true)}
-          />
-
-          <div className="p-4 lg:p-6 space-y-6 max-w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6">
-              <AdminStatCard
-                label="Total Enquiries"
-                value={totalCount}
-                icon={TrendingUp}
-                variant="default"
-              />
-              <AdminStatCard
-                label="New"
-                value={unreadCount}
-                icon={Mail}
-                variant="new"
-              />
-              <AdminStatCard
-                label="Read"
-                value={readCount}
-                icon={CheckCircle2}
-                variant="read"
-              />
-            </div>
-
-            <div className="border border-stone-200 rounded-2xl shadow-sm p-6">
-              <h2 className="text-xl font-bold text-stone-900 mb-6">
-                <Settings size={20} className="mr-2" />
-                Settings
-              </h2>
-              <p className="text-stone-500 text-sm">
-                Admin settings will be available here.
-              </p>
-            </div>
-          </div>
-        </main>
+    <>
+      <nav className="hidden lg:flex items-center gap-2 text-sm text-stone-500 mb-4">
+        <Link
+          href="/admin"
+          className="text-stone-600 hover:text-red-600 hover:underline"
+        >
+          Dashboard
+        </Link>
+        <span className="text-stone-400">/</span>
+        <span className="text-stone-900 font-medium">Settings</span>
+      </nav>
+      <div className="lg:hidden flex items-center gap-2 text-sm text-stone-500 mb-4">
+        <Link
+          href="/admin"
+          className="text-stone-600 hover:text-red-600 hover:underline"
+        >
+          Back to dashboard
+        </Link>
       </div>
-
-      <AdminLogoutModal
-        isOpen={logoutModalOpen}
-        onConfirm={handleLogoutConfirm}
-        onCancel={() => setLogoutModalOpen(false)}
-      />
-    </div>
+      <div className="border border-stone-200 rounded-2xl shadow-sm p-6">
+        <h2 className="text-xl font-bold text-stone-900 mb-6">
+          <Settings size={20} className="mr-2" />
+          Settings
+        </h2>
+        <p className="text-stone-500 text-sm">
+          Admin settings will be available here.
+        </p>
+      </div>
+    </>
   );
 }

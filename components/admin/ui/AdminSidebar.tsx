@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -8,7 +9,6 @@ import {
   Settings,
   ChevronRight,
   ChevronsLeft,
-  ShieldCheck,
   X,
 } from 'lucide-react';
 
@@ -52,8 +52,8 @@ export default function AdminSidebar({
       <aside
       className={`hidden lg:flex lg:flex-col fixed left-0 top-0 h-full bg-white border-r border-stone-200 z-40 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}      >
 <div className={`flex items-center h-16 border-b border-stone-100 bg-white/95 backdrop-blur ${isCollapsed ? 'justify-center px-2' : 'justify-between px-4'}`}>
-          <div className={`items-center gap-2 ${isCollapsed ? 'hidden' : 'flex'}`}>
-  <ShieldCheck size={20} strokeWidth={2} className="text-red-600" />
+          <div className="flex items-center gap-2">
+            <Image src="/logo.png" width={32} height={32} alt="" className="object-contain" />
             <span className={`font-bold text-stone-900 tracking-tight text-lg ${isCollapsed ? 'hidden' : 'block'}`}>
               Admin
             </span>
@@ -108,12 +108,12 @@ export default function AdminSidebar({
       {/* Mobile sidebar drawer */}
       {isOpen && (
         <aside
-          className="fixed left-0 top-0 h-full w-72 bg-white border-r border-stone-200 z-[50] transform transition-transform duration-300 ease-in-out translate-x-0 lg:hidden"
+          className="fixed left-0 top-0 h-full w-full max-w-72 bg-white border-r border-stone-200 z-[50] transform transition-transform duration-300 ease-in-out translate-x-0 lg:hidden"
           aria-label="Admin navigation"
         >
           <div className="flex items-center justify-between h-16 px-4 border-b border-stone-100 bg-white/95 backdrop-blur">
             <div className="flex items-center gap-2">
-              <ShieldCheck size={20} strokeWidth={2} className="text-red-600" />
+              <Image src="/logo.png" width={32} height={32} alt="" className="object-contain" />
               <span className="font-bold text-stone-900 tracking-tight text-lg">
                 Admin
               </span>
