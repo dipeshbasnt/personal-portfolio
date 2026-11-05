@@ -5,6 +5,7 @@ import { enquiriesService } from "@/services/enquiries";
 const EMAIL_TO = process.env.EMAIL_TO ?? "hello@rabbitthedesigner.com";
 const EMAIL_FROM = process.env.EMAIL_FROM ?? "no-reply@rabbitthedesigner.com";
 const MAX_MESSAGE_LENGTH = 5000;
+const EMAIL_TIMEOUT_MS = 10000;
 
 type ContactPayload = {
   name?: string;
@@ -32,6 +33,22 @@ const isRateLimited = (key: string) => {
 
   entry.count += 1;
   return false;
+};
+
+const withTimeout = <T>(
+  promise: Promise<T>,
+  ms: number,
+): Promise<T> => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`Operation timed out after ${ms}ms`)),
+      ms,
+    );
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    clearTimeout(timeoutId);
+  });
 };
 
 export async function POST(request: Request) {
@@ -98,30 +115,60 @@ export async function POST(request: Request) {
         : undefined,
   });
 
+  // Send email with a hard timeout so a hung SMTP never hangs the request.
+  let emailError: Error | null = null;
   try {
-    await transporter.sendMail({
-      from: EMAIL_FROM,
-      to: EMAIL_TO,
-      subject: `Portfolio contact from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-      html: `<p>New contact form submission</p>
+    await withTimeout(
+      transporter.sendMail({
+        from: EMAIL_FROM,
+        to: EMAIL_TO,
+        subject: `Portfolio contact from ${name}`,
+        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+        html: `<p>New contact form submission</p>
 <p><strong>Name:</strong> ${name}</p>
 <p><strong>Email:</strong> ${email}</p>
 <p>${message}</p>`,
-    });
+      }),
+      EMAIL_TIMEOUT_MS,
+    );
+  } catch (error) {
+    emailError = error instanceof Error ? error : new Error(String(error));
+    console.error("Contact form email send failed:", emailError);
+  }
 
+  // Record the enquiry in the database — non-fatal if it fails.
+  let dbError: Error | null = null;
+  try {
     await enquiriesService.create({
       name,
       email,
       message,
     });
-
-    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Contact form email send failed:", error);
+    dbError = error instanceof Error ? error : new Error(String(error));
+    console.error("Contact form enquiry save failed:", dbError);
+  }
+
+  // If both email and database failed, return 500 with details.
+  if (emailError && dbError) {
     return NextResponse.json(
-      { success: false, error: "Failed to send your message. Please try again." },
+      {
+        success: false,
+        error:
+          process.env.NODE_ENV === "development"
+            ? `Email: ${emailError.message}. Database: ${dbError.message}.`
+            : "Failed to send your message. Please try again.",
+        debug: process.env.NODE_ENV === "development"
+          ? {
+              email: { name: emailError.name, stack: emailError.stack },
+              database: { name: dbError.name, stack: dbError.stack },
+            }
+          : undefined,
+      },
       { status: 500 },
     );
   }
+
+  // At least one succeeded — treat as success.
+  return NextResponse.json({ success: true });
 }

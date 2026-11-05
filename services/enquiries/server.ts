@@ -68,31 +68,31 @@ export const enquiriesServerRepository = {
   async create(enquiry: Omit<Enquiry, "id" | "createdAt" | "read">) {
     const supabase = await createClient();
 
+    const id = crypto.randomUUID();
+    const created_at = new Date().toISOString();
+
     const newEnquiry = {
+      id,
       name: enquiry.name,
       email: enquiry.email,
       message: enquiry.message,
       read: false,
-      created_at: new Date().toISOString(),
+      created_at,
     };
 
-    const { data, error } = await supabase
-      .from("enquiries")
-      .insert(newEnquiry)
-      .select()
-      .single();
+    const { error } = await supabase.from("enquiries").insert(newEnquiry);
 
-    if (error || !data) {
-      throw new Error(error?.message ?? "Failed to create enquiry");
+    if (error) {
+      throw new Error(error.message);
     }
 
     return {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      message: data.message,
-      createdAt: data.created_at,
-      read: data.read,
+      id,
+      name: enquiry.name,
+      email: enquiry.email,
+      message: enquiry.message,
+      createdAt: created_at,
+      read: false,
     };
   },
 

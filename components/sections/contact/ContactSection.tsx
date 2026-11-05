@@ -92,7 +92,7 @@ const ContactSection = () => {
       id="contact"
     >
       <Container>
-        <div className="contact-surface flex flex-col items-center gap-16 max-w-[1200px] mx-auto">
+        <div className="contact-surface relative flex flex-col items-center gap-16 max-w-[1200px] mx-auto">
           {/* Header */}
           <div className="contact-header flex flex-col items-center gap-4 text-center">
             <h2
@@ -109,7 +109,7 @@ const ContactSection = () => {
             {/* Form Card */}
             <form
               noValidate
-              className="contact-form p-6 sm:p-8 bg-stone-100 rounded-2xl border border-stone-300 flex flex-col justify-between gap-6"
+              className="contact-form relative p-6 sm:p-8 bg-stone-100 rounded-2xl border border-stone-300 flex flex-col justify-between gap-6"
               onSubmit={handleSubmit}
             >
               <div className="flex flex-col gap-6">
@@ -193,6 +193,39 @@ const ContactSection = () => {
                   {isSubmitting ? "Sending..." : contactContent.submitLabel}
                 </button>
               </div>
+              {isModalOpen && (
+                <div
+                  className="absolute top-0 right-0 w-72 max-w-[calc(100vw-24px)] bg-white border border-stone-200 rounded-xl shadow-lg p-4 z-[60]"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Message sent"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-red-50">
+                      <CheckCircle2 size={16} strokeWidth={2} className="text-red-600" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-stone-900">
+                        Message Sent ✨
+                      </p>
+                      <p className="mt-0.5 text-xs leading-relaxed text-stone-500">
+                        Thanks for reaching out! I’ve received your message and will get back to you shortly.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => {
+                        setIsModalOpen(false);
+                      }}
+                      className="flex-1 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
             </form>
 
             {/* Dark Callout Banner */}
@@ -234,72 +267,6 @@ const ContactSection = () => {
           </div>
         </div>
       </Container>
-
-      {/* Premium Success Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Message sent"
-        >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm transition-opacity duration-300 ease-out opacity-100"
-            onClick={() => setIsModalOpen(false)}
-          />
-          {/* Modal Card */}
-          <div
-            className="relative w-full max-w-sm p-6 mx-4 transform transition-all duration-500 ease-out scale-100"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col items-center gap-4 text-center">
-              {/* Interactive Checkmark Icon */}
-              <div
-                className="relative w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-700 shadow-[0_0_30px_rgba(200,58,33,0.4)] flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer group"
-                role="img"
-                aria-label="Success"
-              >
-                <CheckCircle2
-                  className="w-10 h-10 text-white transition-transform duration-300 group-hover:scale-110"
-                  strokeWidth={3}
-                />
-                <div className="absolute inset-0 rounded-full border border-white/20 animate-ping" />
-              </div>
-
-              <h3
-                className="text-2xl sm:text-3xl font-semibold text-slate-950 tracking-tight"
-              >
-                Message Sent ✨
-              </h3>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Thanks for reaching out! I’ve received your message and will
-                get back to you shortly.
-              </p>
-
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                }}
-                className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-950 hover:bg-slate-800 text-white text-sm font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
-              >
-                Close
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                >
-                  <path d="M5 19L19 5M19 19L5 5" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
