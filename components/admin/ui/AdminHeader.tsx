@@ -4,13 +4,11 @@ import { useState } from 'react';
 import { LogOut, User, Menu } from 'lucide-react';
 
 interface AdminHeaderProps {
-  isLoggedIn?: boolean;
   onMenuToggle: () => void;
   onLogout: () => void;
 }
 
 export default function AdminHeader({
-  isLoggedIn: _isLoggedIn = true,
   onMenuToggle,
   onLogout,
 }: AdminHeaderProps) {

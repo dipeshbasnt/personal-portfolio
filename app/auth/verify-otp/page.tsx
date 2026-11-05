@@ -47,7 +47,7 @@ export default function VerifyOtpPage() {
 
   // Auto-focus next input when a digit is entered
   const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
       const value = e.target.value.replace(/\D/g, "");
       if (!value) return;
 
@@ -65,8 +65,34 @@ export default function VerifyOtpPage() {
           digitRefs.current[index + 1]?.focus();
         });
       }
+
+      // Auto-verify when the last (6th) digit is entered
+      if (index === 5) {
+        const nextCode = code.split("");
+        nextCode[index] = value;
+        const finalCode = nextCode.join("");
+
+        if (/^\d{6}$/.test(finalCode)) {
+          setIsLoading(true);
+          setError(null);
+
+          try {
+            const result = await verifyOtp(finalCode);
+            if (!result.success) {
+              setError(result.error ?? "Invalid verification code.");
+              setIsLoading(false);
+              return;
+            }
+
+            router.replace("/admin");
+          } catch {
+            setError("Verification failed. Please try again.");
+            setIsLoading(false);
+          }
+        }
+      }
     },
-    []
+    [code, router]
   );
 
   const handleKeyDown = useCallback(

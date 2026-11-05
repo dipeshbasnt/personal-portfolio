@@ -25,7 +25,7 @@ export default function AdminEnquiriesPage() {
         const s = await enquiriesClientRepository.getStats();
         setStats(s);
       } catch (err) {
-        console.error("Failed to fetch stats:", err);
+        if (process.env.NODE_ENV === "development") console.error("Failed to fetch stats:", err);
       }
     };
     fetchStats();
@@ -54,7 +54,6 @@ export default function AdminEnquiriesPage() {
           isCollapsed ? 'lg:ml-20' : 'lg:ml-64'
         }`}>
           <AdminHeader
-            isLoggedIn={true}
             onMenuToggle={() => setSidebarOpen((prev) => !prev)}
             onLogout={() => setLogoutModalOpen(true)}
           />
