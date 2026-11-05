@@ -6,8 +6,6 @@ import Heading from "@/components/atoms/Heading";
 import { aboutContent } from "@/data/portfolio";
 import { MapPin } from "lucide-react";
 
-// delete the whole `pillarIcons` constant
-
 const AboutSection = () => (
   <section aria-labelledby="about-title" className="about-section" id="about">
     <Container>

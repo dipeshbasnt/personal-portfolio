@@ -70,7 +70,7 @@ const HowItWorksSection = () => {
           <div className="relative flex flex-col lg:flex-row items-start gap-12 lg:gap-20">
             
             {/* Sticky Left Stepper Navigation */}
-            <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-28 self-start z-10 bg-stone-100/90 backdrop-blur-sm py-2">
+            <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 lg:self-start z-10 bg-stone-100/90 backdrop-blur-sm py-2">
               <nav
                 aria-label="Process navigation"
                 className="flex flex-row lg:flex-col gap-4 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 scrollbar-none"

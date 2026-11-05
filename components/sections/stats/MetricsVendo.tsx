@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { metricsVendoContent } from "@/data/portfolio";
+import Container from "@/components/atoms/Container";
 import {
   motion,
   useInView,
@@ -45,9 +46,9 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
 
   return (
     <section className={`w-full bg-white ${className}`}>
-      <div className="w-full bg-white py-[90px] px-6 md:px-12">
+      <Container className="py-[90px]">
         <motion.div
-          className="w-full max-w-[1340px] mx-auto bg-white rounded-[32px] border border-black/[0.06] flex flex-col md:flex-row items-stretch overflow-hidden group/bar"
+          className="w-full bg-white rounded-[32px] border border-black/[0.06] flex flex-col md:flex-row items-stretch overflow-hidden group/bar"
           id="metrics-bar"
           initial={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.8 }}
@@ -123,7 +124,7 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
             </p>
           </div>
         </motion.div>
-      </div>
+      </Container>
     </section>
   );
 };

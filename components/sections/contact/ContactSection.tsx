@@ -4,7 +4,7 @@ import { useState } from "react";
 import Container from "@/components/atoms/Container";
 import { FloatInput } from "@/components/atoms";
 import { contactContent } from "@/data/portfolio";
-import { Send } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -12,10 +12,77 @@ const ContactSection = () => {
     email: "",
     message: "",
   });
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    message?: string;
+  }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validate = () => {
+    const nextErrors: { name?: string; email?: string; message?: string } = {};
+
+    if (!formData.name.trim()) {
+      nextErrors.name = "Please enter your name.";
+    }
+
+    if (!formData.email.trim()) {
+      nextErrors.email = "Please enter your email address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      nextErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!formData.message.trim()) {
+      nextErrors.message = "Please tell me about your project.";
+    }
+
+    return nextErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add custom submit logic or API endpoint integration here
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+      const data = (await response.json().catch(() => null)) as {
+        success?: boolean;
+        error?: string;
+      } | null;
+
+      if (!response.ok || !data?.success) {
+        throw new Error(data?.error ?? "Something went wrong. Please try again.");
+      }
+
+      setIsModalOpen(true);
+      setFormData({ name: "", email: "", message: "" });
+      setErrors({});
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -25,7 +92,7 @@ const ContactSection = () => {
       id="contact"
     >
       <Container>
-        <div className="contact-surface flex flex-col items-center gap-16 max-w-[1100px] mx-auto">
+        <div className="contact-surface flex flex-col items-center gap-16 max-w-[1200px] mx-auto">
           {/* Header */}
           <div className="contact-header flex flex-col items-center gap-4 text-center">
             <h2
@@ -41,6 +108,7 @@ const ContactSection = () => {
           <div className="contact-grid w-full grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
             {/* Form Card */}
             <form
+              noValidate
               className="contact-form p-6 sm:p-8 bg-stone-100 rounded-2xl border border-stone-300 flex flex-col justify-between gap-6"
               onSubmit={handleSubmit}
             >
@@ -49,6 +117,7 @@ const ContactSection = () => {
                   {/* Name Input */}
                   <div className="flex flex-col gap-2">
                     <FloatInput
+                      error={errors.name}
                       label={contactContent.fields.nameLabel}
                       placeholder={contactContent.fields.namePlaceholder}
                       value={formData.name}
@@ -56,11 +125,17 @@ const ContactSection = () => {
                         setFormData({ ...formData, name: value })
                       }
                     />
+                    {errors.name ? (
+                      <span className="text-sm text-red-500" role="alert">
+                        {errors.name}
+                      </span>
+                    ) : null}
                   </div>
 
                   {/* Email Input */}
                   <div className="flex flex-col gap-2">
                     <FloatInput
+                      error={errors.email}
                       label={contactContent.fields.emailLabel}
                       placeholder={contactContent.fields.emailPlaceholder}
                       value={formData.email}
@@ -68,6 +143,11 @@ const ContactSection = () => {
                         setFormData({ ...formData, email: value })
                       }
                     />
+                    {errors.email ? (
+                      <span className="text-sm text-red-500" role="alert">
+                        {errors.email}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
 
@@ -80,6 +160,7 @@ const ContactSection = () => {
                     {contactContent.fields.messageLabel}
                   </label>
                   <textarea
+                    aria-invalid={errors.message ? true : undefined}
                     className="w-full min-h-[130px] px-4 py-2 bg-white rounded-lg border border-stone-300 text-slate-950 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-950 transition-all resize-y"
                     id="contact-message"
                     name="message"
@@ -89,16 +170,27 @@ const ContactSection = () => {
                     placeholder={contactContent.fields.messagePlaceholder}
                     value={formData.message}
                   />
+                  {errors.message ? (
+                    <span className="text-sm text-red-500" role="alert">
+                      {errors.message}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
               {/* Submit Button */}
               <div>
+                {submitError ? (
+                  <p className="mb-4 text-sm text-red-500 text-center" role="alert">
+                    {submitError}
+                  </p>
+                ) : null}
                 <button
-                  className="px-6 py-3.5 bg-slate-950 hover:bg-slate-800 text-white text-base font-medium tracking-wide rounded-full shadow-[0px_6px_16px_0px_rgba(7,17,31,0.12)] transition-colors cursor-pointer"
+                  className="px-6 py-3.5 bg-slate-950 hover:bg-slate-800 text-white text-base font-medium tracking-wide rounded-full shadow-[0px_6px_16px_0px_rgba(7,17,31,0.12)] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={isSubmitting || isModalOpen}
                   type="submit"
                 >
-                  {contactContent.submitLabel}
+                  {isSubmitting ? "Sending..." : contactContent.submitLabel}
                 </button>
               </div>
             </form>
@@ -142,6 +234,72 @@ const ContactSection = () => {
           </div>
         </div>
       </Container>
+
+      {/* Premium Success Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Message sent"
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm transition-opacity duration-300 ease-out opacity-100"
+            onClick={() => setIsModalOpen(false)}
+          />
+          {/* Modal Card */}
+          <div
+            className="relative w-full max-w-sm p-6 mx-4 transform transition-all duration-500 ease-out scale-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col items-center gap-4 text-center">
+              {/* Interactive Checkmark Icon */}
+              <div
+                className="relative w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-700 shadow-[0_0_30px_rgba(200,58,33,0.4)] flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer group"
+                role="img"
+                aria-label="Success"
+              >
+                <CheckCircle2
+                  className="w-10 h-10 text-white transition-transform duration-300 group-hover:scale-110"
+                  strokeWidth={3}
+                />
+                <div className="absolute inset-0 rounded-full border border-white/20 animate-ping" />
+              </div>
+
+              <h3
+                className="text-2xl sm:text-3xl font-semibold text-slate-950 tracking-tight"
+              >
+                Message Sent ✨
+              </h3>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+                Thanks for reaching out! I’ve received your message and will
+                get back to you shortly.
+              </p>
+
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                }}
+                className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-950 hover:bg-slate-800 text-white text-sm font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+              >
+                Close
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                >
+                  <path d="M5 19L19 5M19 19L5 5" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

@@ -8,7 +8,7 @@ import ProcessSection from "@/components/sections/process/ProcessSection";
 import ServicesSection from "@/components/sections/services/ServicesSection";
 import MetricsVendo from "@/components/sections/stats/MetricsVendo";
 const Home = () => (
-  <main>
+  <main id="main-content" className="overflow-x-clip">
     <HeroSection />
     <AboutSection />
 

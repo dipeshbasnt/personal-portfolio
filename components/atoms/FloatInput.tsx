@@ -20,6 +20,7 @@ export interface FloatInputProps {
   className?: string;
   defaultValue?: string;
   disabled?: boolean;
+  error?: string;
   icon?: React.ReactNode;
   inputClassName?: string;
   label: string;
@@ -36,6 +37,7 @@ export default function FloatInput({
   label,
   placeholder = "",
   disabled = false,
+  error,
   className = "",
   inputClassName = "",
   labelClassName = "",
@@ -97,9 +99,10 @@ export default function FloatInput({
       ) : null}
       <input
         aria-label={label}
-        className={`peer w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${icon ? "pl-10" : ""} ${inputClassName}`}
+        className={`peer w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${error ? "border-red-500" : ""} ${icon ? "pl-10" : ""} ${inputClassName}`}
         disabled={disabled}
         id={inputId}
+        aria-invalid={error ? true : undefined}
         onBlur={() => setIsFocused(false)}
         onChange={(e) => {
           if (!isControlled) {

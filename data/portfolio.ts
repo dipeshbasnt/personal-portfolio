@@ -151,7 +151,7 @@ export const projectsContent = {
   summary:
     "Here are some of the projects I've worked on this from concept to clean, usable interfaces.",
   viewAllLabel: "View all projects",
-  viewAllUrl: "/projects",
+  viewAllUrl: "#work",
   projects: [
     {
       id: "freshbite",
@@ -331,51 +331,6 @@ export const howItWorksContent = {
   ],
 } as const;
 
-// export const journeyContent = {
-//   services: {
-//     eyebrow: "WHAT I BRING",
-//     items: [
-//       {
-//         id: "ui-ux",
-//         title: "UI/UX Design",
-//         skills: "Research · Wireframes · Prototypes · UI Design",
-//       },
-//       {
-//         id: "frontend",
-//         title: "Frontend Development",
-//         skills: "HTML · CSS · JavaScript · React · Next.js",
-//       },
-//       {
-//         id: "problem-solving",
-//         title: "Problem Solving",
-//         skills: "User Focused · Detail Oriented · Always Learning",
-//       },
-//     ],
-//   },
-//   journey: {
-//     eyebrow: "MY JOURNEY",
-//     title: "I started my journey with curiosity and a love for technology.",
-//     body: "Over time, I explored design, learned to code, and found my passion in building web experiences that people enjoy and remember.",
-//   },
-//   education: {
-//     eyebrow: "EDUCATION",
-//     degree: "B.Sc. in Computer Engineering",
-//     status: "(Ongoing)",
-//     institution: "Faculty of Engineering & Technology",
-//     description: "Focusing on software architecture, user interface systems, and modern web application development.",
-//   },
-//   beyondWork: {
-//     eyebrow: "BEYOND WORK",
-//     body: "When I’m not designing or coding, you’ll find me exploring new tech, listening to music, or just enjoying a good cup of coffee.",
-//     interests: [
-//       { label: "Tech", type: "tech" },
-//       { label: "Music", type: "music" },
-//       { label: "Travel", type: "travel" },
-//       { label: "Coffee", type: "coffee" },
-//     ],
-//   },
-// } as const;
-
 export const metricsVendoContent = {
   stats: [
     {
@@ -416,8 +371,6 @@ export const metricsVendoContent = {
     },
   ],
 } as const;
-
-// Add or replace in @/data/portfolio.ts
 
 export interface TestimonialItem {
   id: string;
@@ -477,17 +430,6 @@ export const testimonialsContent = {
     },
   ] as TestimonialItem[],
 } as const;
-
-export interface ServiceItem {
-  id: string;
-  title: string;
-  skills: string;
-}
-
-export interface InterestItem {
-  type: "tech" | "music" | "travel" | "coffee" | string;
-  label: string;
-}
 
 export interface ServiceItem {
   id: string;

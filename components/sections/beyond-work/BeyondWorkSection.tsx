@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "@/components/atoms/Button";
 import Container from "@/components/atoms/Container";
 import Eyebrow from "@/components/atoms/Eyebrow";
@@ -14,7 +14,26 @@ const WorkSection = () => {
     (typeof projectsContent.projects)[number] | null
   >(null);
 
-  const closeCompact = () => setSelectedProject(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  const closeCompact = useCallback(() => setSelectedProject(null), []);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeCompact();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previouslyFocused?.focus?.();
+    };
+  }, [selectedProject, closeCompact]);
 
   return (
     <section
@@ -59,6 +78,15 @@ const WorkSection = () => {
               <article
                 key={project.id}
                 onClick={() => setSelectedProject(project)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedProject(project);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label={`View ${project.title} project details`}
                 className="work-card group flex flex-col gap-5 cursor-pointer"
               >
                 {/* Card Image Container */}
@@ -109,7 +137,12 @@ const WorkSection = () => {
               onClick={closeCompact}
             >
               <div
-                className="relative bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full mx-4 sm:mx-24 max-h-[90vh] overflow-y-auto shadow-2xl border border-stone-200"
+                ref={dialogRef}
+                tabIndex={-1}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="selected-project-title"
+                className="relative bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full mx-4 sm:mx-24 max-h-[90vh] overflow-y-auto shadow-2xl border border-stone-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -130,7 +163,10 @@ const WorkSection = () => {
                   />
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-bold text-slate-950 mb-2 tracking-tight">
+                <h2
+                  id="selected-project-title"
+                  className="text-2xl sm:text-3xl font-bold text-slate-950 mb-2 tracking-tight"
+                >
                   {selectedProject.title}
                 </h2>
                 <span className="work-card-tags text-gray-500 text-xs font-semibold tracking-wider uppercase mb-4 block">

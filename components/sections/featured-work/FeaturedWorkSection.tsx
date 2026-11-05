@@ -28,13 +28,11 @@ const FeaturedWorkSection = () => (
                 {featuredWorkContent.title}
               </Heading>
               
-              {/* FIXED LINE: Spans naturally across width without squeezing or adding left border */}
               <p className="featured-work-summary w-full">
                 {featuredWorkContent.summary}
               </p>
             </div>
 
-            {/* UNTOUCHED: Original Button structure maintained */}
             <Button
               className="featured-work-cta shrink-0"
               href={featuredWorkContent.ctaUrl}

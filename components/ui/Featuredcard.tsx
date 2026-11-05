@@ -372,6 +372,11 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
             </div>
           </div>
         </div>
+
+        {/* Live region announcing the active carousel slide */}
+        <span aria-live="polite" aria-atomic="true" className="sr-only">
+          {`Slide ${pad(currentIndex + 1)} of ${pad(slideCount)}. ${current?.section.label ?? ""}`}
+        </span>
       </div>
     </MotionConfig>
   );

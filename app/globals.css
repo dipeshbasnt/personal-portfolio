@@ -51,8 +51,8 @@
 
 :root {
   color-scheme: light;
-  --container-max: 1200px;
-  --container-margin: 16px;
+  --container-max: 1440px;
+  --container-margin: 20px;
   --container-columns: 4;
   --container-gutter: 16px;
   --section-space: clamp(4rem, 8vw, 7.5rem);
@@ -60,7 +60,7 @@
 
 @media (min-width: 481px) {
   :root {
-    --container-margin: 24px;
+    --container-margin: 20px;
     --container-columns: 8;
     --container-gutter: 24px;
   }
@@ -68,7 +68,7 @@
 
 @media (min-width: 1024px) {
   :root {
-    --container-margin: 100px;
+    --container-margin: 80px;
     --container-columns: 12;
     --container-gutter: 20px;
   }
@@ -81,11 +81,13 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
+  overflow-x: clip;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
+  overflow-x: clip;
   background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -332,10 +334,23 @@ textarea[aria-invalid="true"]:focus-visible {
 
   .hero-navbar-links {
     gap: 18px;
+    flex-wrap: wrap;
   }
 
   .hero-navbar-links a {
     font-size: 16px;
+  }
+
+  .hero-navbar-logo {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .hero-navbar-contact {
+    min-width: auto;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 15px;
   }
 
 }
