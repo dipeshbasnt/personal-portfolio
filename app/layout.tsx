@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   title: "RabbitTheDesigner — Designer & Frontend Developer",
   description:
     "The portfolio of RabbitTheDesigner, blending thoughtful digital design with responsive frontend development.",
+  openGraph: {
+    title: "RabbitTheDesigner — Designer & Frontend Developer",
+    description:
+      "The portfolio of RabbitTheDesigner, blending thoughtful digital design with responsive frontend development.",
+    type: "website",
+  },
 };
 
 const RootLayout = ({ children }: LayoutProps<"/">) => (

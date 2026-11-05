@@ -28,7 +28,7 @@ export const enquiriesServerRepository = {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Failed to fetch enquiries:", error);
+      if (process.env.NODE_ENV === "development") console.error("Failed to fetch enquiries:", error);
       return [];
     }
 
@@ -132,7 +132,7 @@ export const enquiriesServerRepository = {
       .select("read");
 
     if (error) {
-      console.error("Failed to fetch enquiry stats:", error);
+      if (process.env.NODE_ENV === "development") console.error("Failed to fetch enquiry stats:", error);
       return { total: 0, new: 0, read: 0 };
     }
 

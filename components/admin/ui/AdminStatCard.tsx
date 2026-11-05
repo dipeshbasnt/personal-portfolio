@@ -29,7 +29,7 @@ export default function AdminStatCard({
     <div
       className={`
         p-5 rounded-2xl border shadow-sm transition-all duration-200
-        hover:shadow-md hover:-translate-y-1 max-w-sm
+        hover:shadow-md hover:-translate-y-1
         ${variantColors[variant]}
       `}
     >

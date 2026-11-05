@@ -84,6 +84,12 @@ html {
   overflow-x: clip;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   min-height: 100vh;
   margin: 0;
@@ -207,12 +213,28 @@ textarea[aria-invalid="true"]:focus-visible {
 /* Navbar */
 
 .hero-navbar {
+  --navbar-extra: 6px;
   position: fixed;
   z-index: 50;
   top: 0;
   left: 50%;
-  width: min(100% - 24px, var(--container-max));
+  width: min(
+    calc(100% - 2 * var(--container-margin) + 2 * var(--navbar-extra)),
+    calc(var(--container-max) + 2 * var(--navbar-extra))
+  );
   transform: translateX(-50%);
+}
+
+@media (min-width: 481px) {
+  .hero-navbar {
+    --navbar-extra: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-navbar {
+    --navbar-extra: 12px;
+  }
 }
 
 .hero-navbar-container {
@@ -360,7 +382,7 @@ textarea[aria-invalid="true"]:focus-visible {
 @media (max-width: 900px) {
   .hero-navbar {
     top: 0;
-    width: min(100% - 16px, var(--container-max));
+   
   }
 
   .hero-navbar-container {
