@@ -4,9 +4,9 @@ import Container from "@/components/atoms/Container";
 import { footerContent } from "@/data/portfolio";
 import Image from "next/image";
 import { ArrowUp } from "lucide-react";
-import { FaDribbble, FaInstagram, FaLinkedin, FaXTwitter } from "react-icons/fa6";
+import { FaDribbble, FaGithub, FaLinkedin, FaBehance } from "react-icons/fa6";
 
-const socialIcons = [FaInstagram, FaDribbble, FaLinkedin, FaXTwitter];
+const socialIcons = [FaGithub, FaDribbble, FaBehance, FaLinkedin];
 
 const Footer = () => {
   const scrollToTop = () => {

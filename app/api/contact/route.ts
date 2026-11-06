@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { enquiriesService } from "@/services/enquiries";
+import { inngestClient } from "@/lib/inngest/client";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-const EMAIL_TO = process.env.EMAIL_TO ?? "hello@rabbitthedesigner.com";
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "no-reply@rabbitthedesigner.com";
 const MAX_MESSAGE_LENGTH = 5000;
-const EMAIL_TIMEOUT_MS = 10000;
 
 type ContactPayload = {
   name?: string;
@@ -35,21 +33,11 @@ const isRateLimited = (key: string) => {
   return false;
 };
 
-const withTimeout = <T>(
-  promise: Promise<T>,
-  ms: number,
-): Promise<T> => {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    timeoutId = setTimeout(
-      () => reject(new Error(`Operation timed out after ${ms}ms`)),
-      ms,
-    );
-  });
-  return Promise.race([promise, timeoutPromise]).finally(() => {
-    clearTimeout(timeoutId);
-  });
-};
+// Admin Supabase client for writing to email_outbox when Inngest enqueue fails.
+const supabaseAdmin = createSupabaseClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SECRET_KEY!
+);
 
 export async function POST(request: Request) {
   let body: ContactPayload | null = null;
@@ -105,70 +93,62 @@ export async function POST(request: Request) {
     );
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST ?? "smtp.example.com",
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: Number(process.env.SMTP_PORT ?? 465) === 465,
-    auth:
-      process.env.SMTP_USER && process.env.SMTP_PASS
-        ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-        : undefined,
-  });
-
-  // Send email with a hard timeout so a hung SMTP never hangs the request.
-  let emailError: Error | null = null;
+  // Step 1: Save the enquiry to Supabase first with email_status = 'pending'.
+  // This is the source of truth — if this fails, we return an error.
+  let enquiryId: string | null = null;
   try {
-    await withTimeout(
-      transporter.sendMail({
-        from: EMAIL_FROM,
-        to: EMAIL_TO,
-        subject: `Portfolio contact from ${name}`,
-        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-        html: `<p>New contact form submission</p>
-<p><strong>Name:</strong> ${name}</p>
-<p><strong>Email:</strong> ${email}</p>
-<p>${message}</p>`,
-      }),
-      EMAIL_TIMEOUT_MS,
-    );
-  } catch (error) {
-    emailError = error instanceof Error ? error : new Error(String(error));
-    console.error("Contact form email send failed:", emailError);
-  }
-
-  // Record the enquiry in the database — non-fatal if it fails.
-  let dbError: Error | null = null;
-  try {
-    await enquiriesService.create({
+    const created = await enquiriesService.create({
       name,
       email,
       message,
+      emailStatus: "pending",
     });
+    enquiryId = created.id;
   } catch (error) {
-    dbError = error instanceof Error ? error : new Error(String(error));
+    const dbError = error instanceof Error ? error : new Error(String(error));
     console.error("Contact form enquiry save failed:", dbError);
-  }
-
-  // If both email and database failed, return 500 with details.
-  if (emailError && dbError) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          process.env.NODE_ENV === "development"
-            ? `Email: ${emailError.message}. Database: ${dbError.message}.`
-            : "Failed to send your message. Please try again.",
-        debug: process.env.NODE_ENV === "development"
-          ? {
-              email: { name: emailError.name, stack: emailError.stack },
-              database: { name: dbError.name, stack: dbError.stack },
-            }
-          : undefined,
+        error: "Failed to save your message. Please try again.",
+        debug: process.env.NODE_ENV === "development" ? dbError.message : undefined,
       },
       { status: 500 },
     );
   }
 
-  // At least one succeeded — treat as success.
+  // Step 2: Try to enqueue the Inngest background email job.
+  // If this fails, we fall back to the email_outbox table for recovery.
+  let enqueueError: Error | null = null;
+  if (enquiryId) {
+    try {
+      await inngestClient.send({
+        name: "contact/email.send",
+        data: {
+          enquiryId,
+          name,
+          email,
+          message,
+        },
+      });
+    } catch (error) {
+      enqueueError = error instanceof Error ? error : new Error(String(error));
+      console.error("Failed to enqueue Inngest email job:", enqueueError);
+
+      // Outbox pattern: persist the delivery request so it can be recovered later.
+      try {
+        await supabaseAdmin.from("email_outbox").insert({
+          enquiry_id: enquiryId,
+          email_status: "pending",
+          retry_count: 0,
+        });
+      } catch (outboxError) {
+        console.error("Failed to insert into email_outbox:", outboxError);
+      }
+    }
+  }
+
+  // Step 3: Return success immediately — never wait for Gmail SMTP.
+  // The email is sent asynchronously by Inngest with retries.
   return NextResponse.json({ success: true });
 }

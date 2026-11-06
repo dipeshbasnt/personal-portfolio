@@ -17,27 +17,18 @@ const HeroCharacter = ({
   sizes,
   src,
 }: HeroCharacterProps) => {
-  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(isLoaded);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (isLoaded) return;
 
-    const animationTimer = window.setTimeout(
-      () => setShouldAnimate(true),
-      60,
-    );
-
-    return () => window.clearTimeout(animationTimer);
-  }, [isLoaded]);
-
-  useEffect(() => {
     const fallbackTimer = window.setTimeout(
       () => setShouldAnimate(true),
-      2200,
+      500,
     );
 
     return () => window.clearTimeout(fallbackTimer);
-  }, []);
+  }, [isLoaded]);
 
   return (
     <div className="hero-portrait">

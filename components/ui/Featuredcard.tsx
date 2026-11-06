@@ -5,6 +5,8 @@ import {
   AnimatePresence,
   MotionConfig,
   motion,
+  useInView,
+  useMotionValue,
   useReducedMotion,
 } from "motion/react";
 import {
@@ -96,9 +98,11 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
   const [hoverPaused, setHoverPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const progress = useMotionValue(0);
   const elapsedRef = useRef(0);
   const startedAtRef = useRef<number | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(carouselRef, { once: false, margin: "-100px" });
   const paused = hoverPaused || focusPaused || userPaused;
 
   const slideCount = slides.length;
@@ -107,7 +111,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
   const current = slides[currentIndex];
 
   useEffect(() => {
-    if (!autoplay || paused) return;
+    if (!isInView || !autoplay || paused) return;
 
     startedAtRef.current = Date.now();
     const timer = window.setInterval(() => {
@@ -118,12 +122,12 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
       if (elapsed >= AUTO_PLAY_INTERVAL) {
         elapsedRef.current = 0;
         startedAtRef.current = null;
-        setProgress(0);
+        progress.set(0);
         setStep((currentStep) => currentStep + 1);
         return;
       }
 
-      setProgress(elapsed / AUTO_PLAY_INTERVAL);
+      progress.set(elapsed / AUTO_PLAY_INTERVAL);
     }, 50);
 
     return () => {
@@ -133,14 +137,14 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
       }
       window.clearInterval(timer);
     };
-  }, [autoplay, paused, step]);
+  }, [autoplay, isInView, paused, progress, step]);
 
   if (slides.length === 0) return null;
 
   const resetTimer = () => {
     elapsedRef.current = 0;
     startedAtRef.current = null;
-    setProgress(0);
+    progress.set(0);
   };
 
   const handlePrevious = () => {
@@ -176,6 +180,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
   return (
     <MotionConfig reducedMotion="user">
       <div
+        ref={carouselRef}
         className="mx-auto w-full max-w-7xl"
         onMouseEnter={() => setHoverPaused(true)}
         onMouseLeave={() => setHoverPaused(false)}
@@ -268,11 +273,9 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                                         <span className="absolute inset-0 bg-red-500" />
                                       )}
                                       {live && (
-                                        <span
+                                        <motion.span
                                           className="absolute inset-y-0 left-0 origin-left bg-red-500"
-                                          style={{
-                                            transform: `scaleX(${autoplay ? progress : 1})`,
-                                          }}
+                                          style={{ scaleX: autoplay ? progress : 1 }}
                                         />
                                       )}
                                     </span>
