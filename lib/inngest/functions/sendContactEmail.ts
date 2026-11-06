@@ -1,5 +1,5 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 import { inngestClient } from "@/lib/inngest/client";
 
@@ -12,7 +12,7 @@ const supabaseAdmin = createSupabaseClient(
 );
 
 const EMAIL_TO = process.env.EMAIL_TO ?? "hello@rabbitthedesigner.com";
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "no-reply@rabbitthedesigner.com";
+const EMAIL_FROM = process.env.EMAIL_FROM ?? "onboarding@resend.dev";
 
 type SendContactEmailData = {
   enquiryId: string;
@@ -47,49 +47,25 @@ export const sendContactEmail = inngestClient.createFunction(
       return { status: "skipped", reason: "already_sent", enquiryId };
     }
 
-    // Create a Nodemailer transporter for this attempt.
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST ?? "smtp.gmail.com",
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: Number(process.env.SMTP_PORT ?? 465) === 465,
-      auth:
-        process.env.SMTP_USER && process.env.SMTP_PASS
-          ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-          : undefined,
-    });
-
-    // Send the email with a timeout so a hung SMTP never hangs the step.
-    const timeoutMs = 30000;
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timeoutId = setTimeout(
-        () => reject(new Error(`SMTP send timed out after ${timeoutMs}ms`)),
-        timeoutMs,
-      );
-    });
-
     let emailError: Error | null = null;
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     try {
-      await Promise.race([
-        transporter.sendMail({
-          from: EMAIL_FROM,
-          to: EMAIL_TO,
-          subject: `Portfolio contact from ${name}`,
-          text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-          html: `<p>New contact form submission</p>
+      await resend.emails.send({
+        from: EMAIL_FROM,
+        to: EMAIL_TO,
+        subject: `Portfolio contact from ${name}`,
+        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+        html: `<p>New contact form submission</p>
 <p><strong>Name:</strong> ${name}</p>
 <p><strong>Email:</strong> ${email}</p>
 <p>${message}</p>`,
-        }),
-        timeoutPromise,
-      ]);
+      });
     } catch (error) {
       emailError =
         error instanceof Error ? error : new Error(String(error));
-      console.error("SMTP send failed:", emailError.message);
-    } finally {
-      if (timeoutId) clearTimeout(timeoutId);
+      console.error("Resend send failed:", emailError.message);
     }
 
     if (emailError) {
