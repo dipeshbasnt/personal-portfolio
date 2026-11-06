@@ -9,7 +9,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
-} from "framer-motion";
+} from "motion/react";
 import { Briefcase, Code2, Layers } from "lucide-react";
 
 interface CounterProps {

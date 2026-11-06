@@ -68,6 +68,8 @@ export const sendContactEmail = inngestClient.createFunction(
       );
     });
 
+    let emailError: Error | null = null;
+
     try {
       await Promise.race([
         transporter.sendMail({
@@ -82,8 +84,26 @@ export const sendContactEmail = inngestClient.createFunction(
         }),
         timeoutPromise,
       ]);
+    } catch (error) {
+      emailError =
+        error instanceof Error ? error : new Error(String(error));
+      console.error("SMTP send failed:", emailError.message);
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
+    }
+
+    if (emailError) {
+      // Mark as failed so recoverOutbox can retry later.
+      await supabaseAdmin
+        .from("enquiries")
+        .update({ email_status: "failed" })
+        .eq("id", enquiryId);
+
+      return {
+        status: "failed",
+        enquiryId,
+        error: emailError.message,
+      };
     }
 
     // Mark the enquiry as sent and clean up the outbox entry.

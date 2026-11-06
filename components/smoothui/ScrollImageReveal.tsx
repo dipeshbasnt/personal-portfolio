@@ -4,7 +4,6 @@ import { cn } from "@/components/smoothui/smoothui-utils";
 import Image from "next/image";
 import {
   motion,
-  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -44,6 +43,7 @@ export type ScrollImageRevealDirection = "left" | "right" | "up" | "down";
 export interface ScrollImageRevealProps {
   /** Accessible description of the image. Required for image mode. */
   alt?: string;
+  /** Additional Tailwind classes. */
   className?: string;
   /** Ref to a scrollable ancestor that drives progress instead of the window. */
   container?: RefObject<HTMLElement | null>;
@@ -111,9 +111,9 @@ const buildBlindsMask = (
 };
 
 /**
- * Child component that owns all motion infrastructure AND rendering. Mounts
- * only when the element enters the viewport, deferring scroll-reveal animation
- * setup for below-the-fold images until they are actually needed.
+ * Motion component that owns all scroll-reveal infrastructure. Mounts
+ * immediately so the wipe animation starts from `progress = 0` when the
+ * element is below the fold and plays naturally as the user scrolls.
  */
 function ScrollImageRevealMotion({
   src,
@@ -235,31 +235,6 @@ export default function ScrollImageReveal({
   delay = 0,
 }: ScrollImageRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-
-  // Defer motion infrastructure until the element enters the viewport. Images
-  // below the fold don't need scroll-reveal animation setup during initial
-  // hydration, saving main-thread work for above-the-fold content.
-  // `useInView` returns false on SSR and initial client render, so both
-  // produce the same static output — no hydration mismatch.
-  const isVisible = useInView(ref, { once: false, margin: "-100px" });
-
-  if (!isVisible) {
-    return (
-      <div
-        ref={ref}
-        className={cn("relative overflow-hidden", rounded, className)}
-        style={style}
-      >
-        {children ? (
-          <div className="relative w-full h-full">{children}</div>
-        ) : (
-          <div className="absolute inset-x-0 w-full" style={{ height: "100%" }}>
-            <Image alt={alt!} className="object-cover" fill sizes={sizes} src={src!} />
-          </div>
-        )}
-      </div>
-    );
-  }
 
   return (
     <ScrollImageRevealMotion
