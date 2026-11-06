@@ -5,6 +5,7 @@ export interface Enquiry {
   message: string;
   createdAt: string;
   read: boolean;
+  emailStatus?: string;
 }
 
 export interface EnquiryFilters {

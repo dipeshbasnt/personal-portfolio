@@ -1,9 +1,10 @@
- "use client";
+"use client";
 
 import { cn } from "@/components/smoothui/smoothui-utils";
 import Image from "next/image";
 import {
   motion,
+  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -109,7 +110,12 @@ const buildBlindsMask = (
   return `repeating-linear-gradient(${axis}, #000 0px, #000 ${revealPx}px, transparent ${revealPx}px, transparent ${BLIND_BAND_SIZE_PX}px)`;
 };
 
-export default function ScrollImageReveal({
+/**
+ * Child component that owns all motion infrastructure AND rendering. Mounts
+ * only when the element enters the viewport, deferring scroll-reveal animation
+ * setup for below-the-fold images until they are actually needed.
+ */
+function ScrollImageRevealMotion({
   src,
   alt,
   mask = "wipe",
@@ -121,11 +127,11 @@ export default function ScrollImageReveal({
   rounded = DEFAULT_ROUNDED,
   sizes = "100vw",
   className,
-  children,
   style,
   delay = 0,
-}: ScrollImageRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  children,
+  ref,
+}: ScrollImageRevealProps & { ref: React.RefObject<HTMLDivElement | null> }) {
   const shouldReduceMotion = useReducedMotion();
   const maxRevealRef = useRef(0);
 
@@ -133,8 +139,6 @@ export default function ScrollImageReveal({
   const baseSpring = useSpring(scrollYProgress, SPRING_CONFIG);
 
   const revealProgress = useTransform(baseSpring, (latest) => {
-    // Apply delay: hold at 0 until scroll progress exceeds `delay`,
-    // then ramp up over the remaining range for staggered one-by-one reveals.
     const damped = latest <= delay ? 0 : clampUnit((latest - delay) / (1 - delay));
     const scaled = clampUnit(damped * REVEAL_SPEED_MULTIPLIER);
     if (!once) {
@@ -144,9 +148,6 @@ export default function ScrollImageReveal({
     return maxRevealRef.current;
   });
 
-  // The mask lives on the frame, not the image: the image is deliberately
-  // taller than the frame so the parallax has somewhere to travel, and a clip
-  // measured against that oversized box would never line up with the edges.
   const clipPath = useTransform(revealProgress, (latest) =>
     shouldReduceMotion || mask === "blinds" || mask === "scale"
       ? NO_CLIP
@@ -159,8 +160,6 @@ export default function ScrollImageReveal({
       : buildBlindsMask(direction, latest)
   );
 
-  // Scales *down* into place from an overscan, never up from smaller than the
-  // frame — scaling up from 0.85 would expose the background at the edges.
   const scale = useTransform(revealProgress, (latest) =>
     shouldReduceMotion || mask !== "scale"
       ? FULL_SCALE
@@ -216,5 +215,70 @@ export default function ScrollImageReveal({
         </motion.div>
       )}
     </motion.div>
+  );
+}
+
+export default function ScrollImageReveal({
+  src,
+  alt,
+  mask = "wipe",
+  direction = "left",
+  parallax = DEFAULT_PARALLAX_PX,
+  offset = DEFAULT_OFFSET,
+  container,
+  once = false,
+  rounded = DEFAULT_ROUNDED,
+  sizes = "100vw",
+  className,
+  children,
+  style,
+  delay = 0,
+}: ScrollImageRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Defer motion infrastructure until the element enters the viewport. Images
+  // below the fold don't need scroll-reveal animation setup during initial
+  // hydration, saving main-thread work for above-the-fold content.
+  // `useInView` returns false on SSR and initial client render, so both
+  // produce the same static output — no hydration mismatch.
+  const isVisible = useInView(ref, { once: false, margin: "-100px" });
+
+  if (!isVisible) {
+    return (
+      <div
+        ref={ref}
+        className={cn("relative overflow-hidden", rounded, className)}
+        style={style}
+      >
+        {children ? (
+          <div className="relative w-full h-full">{children}</div>
+        ) : (
+          <div className="absolute inset-x-0 w-full" style={{ height: "100%" }}>
+            <Image alt={alt!} className="object-cover" fill sizes={sizes} src={src!} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <ScrollImageRevealMotion
+      ref={ref}
+      src={src}
+      alt={alt}
+      mask={mask}
+      direction={direction}
+      parallax={parallax}
+      offset={offset}
+      container={container}
+      once={once}
+      rounded={rounded}
+      sizes={sizes}
+      className={className}
+      style={style}
+      delay={delay}
+    >
+      {children}
+    </ScrollImageRevealMotion>
   );
 }

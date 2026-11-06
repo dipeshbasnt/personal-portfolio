@@ -65,7 +65,9 @@ export const enquiriesServerRepository = {
     };
   },
 
-  async create(enquiry: Omit<Enquiry, "id" | "createdAt" | "read">) {
+  async create(enquiry: Omit<Enquiry, "id" | "createdAt" | "read"> & {
+    emailStatus?: string;
+  }) {
     const supabase = await createClient();
 
     const id = crypto.randomUUID();
@@ -78,6 +80,7 @@ export const enquiriesServerRepository = {
       message: enquiry.message,
       read: false,
       created_at,
+      email_status: enquiry.emailStatus ?? "pending",
     };
 
     const { error } = await supabase.from("enquiries").insert(newEnquiry);
@@ -93,6 +96,7 @@ export const enquiriesServerRepository = {
       message: enquiry.message,
       createdAt: created_at,
       read: false,
+      emailStatus: newEnquiry.email_status,
     };
   },
 

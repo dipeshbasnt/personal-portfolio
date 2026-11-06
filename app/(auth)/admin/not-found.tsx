@@ -6,7 +6,7 @@ export default function AdminNotFound() {
     <div className="min-h-screen bg-stone-50 flex items-center justify-center">
       <div className="text-center">
         <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-6">
-          <Image src="/logo.png" width={32} height={32} alt="" className="object-contain" />
+          <Image src="/logo.svg" width={32} height={32} alt="" className="object-contain" />
         </div>
         <h1 className="text-2xl font-bold text-stone-900 mb-2">Page not found</h1>
         <p className="text-sm text-stone-500 mb-8">

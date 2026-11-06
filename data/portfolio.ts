@@ -46,7 +46,7 @@ export const heroStats: HeroStat[] = [
   { value: "5+", label: "Technologies & Tools" },
 ];
 
-export const characterImage = "/images/character.PNG";
+export const characterImage = "/images/character.webp";
 
 export const aboutContent = {
   eyebrow: "About me",
@@ -140,7 +140,7 @@ export const featuredWorkContent = {
     tags: "FIGMA DESIGN · REACT · NEXT.JS",
     description:
       "An agency portfolio website designed in Figma and built with React and Next.js ,this is my first complete Figma-to-code project.",
-    imageSrc: "/images/featured-work.png",
+    imageSrc: "/images/featured-work.webp",
     imageAlt: "RatoPandaDigitals agency portfolio website showcase",
   },
 } as const;
@@ -194,10 +194,11 @@ export const footerContent = {
     { label: "Contact", href: "#contact" },
   ],
   socials: [
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "Dribbble", href: "https://dribbble.com" },
-    { label: "LinkedIn", href: "https://linkedin.com" },
-    { label: "X (Twitter)", href: "https://x.com" },
+    { label: "Github", href: "https://github.com/dipeshbasnt" },
+    { label: "Dribbble", href: "https://dribbble.com/dipesh-basnet" },
+     { label: "Behance", href: "https://www.behance.net/dipeshbasnet98" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/dipesh-basnet98" },
+    
   ],
 } as const;
 

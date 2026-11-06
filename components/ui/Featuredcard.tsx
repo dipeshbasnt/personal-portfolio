@@ -5,6 +5,8 @@ import {
   AnimatePresence,
   MotionConfig,
   motion,
+  useInView,
+  useMotionValue,
   useReducedMotion,
 } from "motion/react";
 import {
@@ -96,9 +98,11 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
   const [hoverPaused, setHoverPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const progress = useMotionValue(0);
   const elapsedRef = useRef(0);
   const startedAtRef = useRef<number | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(carouselRef, { once: false, margin: "-100px" });
   const paused = hoverPaused || focusPaused || userPaused;
 
   const slideCount = slides.length;
@@ -107,7 +111,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
   const current = slides[currentIndex];
 
   useEffect(() => {
-    if (!autoplay || paused) return;
+    if (!isInView || !autoplay || paused) return;
 
     startedAtRef.current = Date.now();
     const timer = window.setInterval(() => {
@@ -118,12 +122,12 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
       if (elapsed >= AUTO_PLAY_INTERVAL) {
         elapsedRef.current = 0;
         startedAtRef.current = null;
-        setProgress(0);
+        progress.set(0);
         setStep((currentStep) => currentStep + 1);
         return;
       }
 
-      setProgress(elapsed / AUTO_PLAY_INTERVAL);
+      progress.set(elapsed / AUTO_PLAY_INTERVAL);
     }, 50);
 
     return () => {
@@ -133,14 +137,14 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
       }
       window.clearInterval(timer);
     };
-  }, [autoplay, paused, step]);
+  }, [autoplay, isInView, paused, progress, step]);
 
   if (slides.length === 0) return null;
 
   const resetTimer = () => {
     elapsedRef.current = 0;
     startedAtRef.current = null;
-    setProgress(0);
+    progress.set(0);
   };
 
   const handlePrevious = () => {
@@ -176,6 +180,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
   return (
     <MotionConfig reducedMotion="user">
       <div
+        ref={carouselRef}
         className="mx-auto w-full max-w-7xl"
         onMouseEnter={() => setHoverPaused(true)}
         onMouseLeave={() => setHoverPaused(false)}
@@ -209,7 +214,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                       <span
                         className={cn(
                           "pt-2 font-mono text-xs tabular-nums transition-colors duration-300",
-                          isActive ? "text-red-500" : "text-slate-400"
+                          isActive ? "text-accent" : "text-slate-600"
                         )}
                       >
                         {pad(index + 1)}
@@ -222,7 +227,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                               "text-xl font-semibold tracking-tight transition-colors duration-300 sm:text-2xl",
                               isActive
                                 ? "text-slate-900"
-                                : "text-slate-400 group-hover:text-slate-700"
+                                : "text-slate-600 group-hover:text-slate-700"
                             )}
                           >
                             {feature.label}
@@ -250,7 +255,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                               className="block overflow-hidden"
                             >
-                              <span className="mt-1.5 block text-sm text-slate-500">
+                              <span className="mt-1.5 block text-sm text-slate-600">
                                 {feature.category}
                               </span>
 
@@ -268,11 +273,9 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                                         <span className="absolute inset-0 bg-red-500" />
                                       )}
                                       {live && (
-                                        <span
+                                        <motion.span
                                           className="absolute inset-y-0 left-0 origin-left bg-red-500"
-                                          style={{
-                                            transform: `scaleX(${autoplay ? progress : 1})`,
-                                          }}
+                                          style={{ scaleX: autoplay ? progress : 1 }}
                                         />
                                       )}
                                     </span>
@@ -300,7 +303,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                 >
                   {pad(currentIndex + 1)} / {pad(slideCount)}
                 </span>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-600">
                   {autoplay ? (paused ? "Paused" : "Auto play") : "Manual"}
                 </span>
               </div>
@@ -349,7 +352,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                     animate={{
                       x: isPrev ? -96 : isNext ? 96 : 0,
                       scale: isActive ? 1 : isPrev || isNext ? 0.86 : 0.74,
-                      opacity: isActive ? 1 : isPrev || isNext ? 0.35 : 0,
+                      opacity: isActive ? 1 : isPrev || isNext ? 0.6 : 0,
                       rotate: isPrev ? -4 : isNext ? 4 : 0,
                       zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
                       pointerEvents: isActive ? "auto" : "none",
@@ -412,13 +415,13 @@ function ServiceFace({
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white">
           <Icon size={22} strokeWidth={2} />
         </span>
-        <span className="font-mono text-xs tabular-nums text-slate-400">
+        <span className="font-mono text-xs tabular-nums text-ink">
           {pad(slide.localIndex + 1)} / {pad(total)}
         </span>
       </div>
 
       <div className="relative">
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-600">
           {slide.section.category}
         </p>
         <h3 className="text-2xl font-semibold leading-tight tracking-tight sm:text-[1.75rem]">
@@ -455,7 +458,7 @@ function StatementFace({ slide, isActive }: { slide: Slide; isActive: boolean })
       />
 
       <div className="relative flex items-start justify-between">
-        <span className="rounded-full border border-slate-900/15 px-3.5 py-1 text-xs font-medium uppercase tracking-[0.18em] text-slate-600">
+        <span className="rounded-full border border-slate-900/15 px-3.5 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink">
           {section.category}
         </span>
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white">

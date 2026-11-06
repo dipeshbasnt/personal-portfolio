@@ -40,7 +40,7 @@ const Navbar = () => {
               alt=""
               className="hero-navbar-logo-image"
               height={44}
-              src="/logo.png"
+              src="/logo.svg"
               unoptimized
               width={44}
             />

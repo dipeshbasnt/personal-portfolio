@@ -1,6 +1,4 @@
 
-"use client";
-
 import Button from "@/components/atoms/Button";
 import Eyebrow from "@/components/atoms/Eyebrow";
 import Heading from "@/components/atoms/Heading";

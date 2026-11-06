@@ -61,12 +61,12 @@ export default function FloatInput({
       return {
         backgroundColor: "#fffefa",
         borderColor: "#ef4444",
-        color: "#ef4444",
+        color: "#c83a21",
         scale: 0.85,
         y: -24,
       };
     }
-    return { color: "#6b7280", scale: 1, y: 0 };
+    return { color: "#606a73", scale: 1, y: 0 };
   };
 
   const getLabelStyle = () => {
@@ -77,12 +77,12 @@ export default function FloatInput({
       return {
         backgroundColor: "#fffefa",
         borderColor: "#ef4444",
-        color: "#ef4444",
+        color: "#c83a21",
         transform: "translateY(-24px) scale(0.85)",
       };
     }
     return {
-      color: "#6b7280",
+      color: "#606a73",
       transform: "translateY(0) scale(1)",
     };
   };

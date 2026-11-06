@@ -287,11 +287,11 @@ textarea[aria-invalid="true"]:focus-visible {
 }
 
 .hero-navbar-links a:hover {
-  color: var(--color-accent-bright);
+  color: var(--color-accent);
 }
 
 .hero-navbar-links a[aria-current="page"] {
-  color: var(--color-accent-bright);
+  color: var(--color-accent);
 }
 
 .hero-navbar-links a[aria-current="page"] > span {
@@ -533,7 +533,6 @@ textarea[aria-invalid="true"]:focus-visible {
 }
 
 .hero-image {
-  opacity: 0;
   transform: translate3d(0, 32px, 0) scale(0.88);
   transform-origin: center bottom;
 }

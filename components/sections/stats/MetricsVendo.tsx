@@ -22,9 +22,17 @@ interface MetricsVendoProps {
   className?: string;
 }
 
-const Counter = ({ value, suffix = "", decimals = 0 }: CounterProps) => {
+/**
+ * Child component that owns all framer-motion infrastructure. Only mounts
+ * when the counter enters the viewport, deferring useMotionValue, useSpring,
+ * and useTransform for below-the-fold counters until they are actually needed.
+ */
+function AnimatedCounter({
+  value,
+  suffix = "",
+  decimals = 0,
+}: CounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const count = useMotionValue(0);
   const spring = useSpring(count, { damping: 30, stiffness: 100 });
   const display = useTransform(spring, (current) =>
@@ -32,12 +40,25 @@ const Counter = ({ value, suffix = "", decimals = 0 }: CounterProps) => {
   );
 
   useEffect(() => {
-    if (isInView) {
-      count.set(value);
-    }
-  }, [isInView, count, value]);
+    count.set(value);
+  }, [count, value]);
 
   return <motion.span ref={ref}>{display}</motion.span>;
+}
+
+const Counter = ({ value, suffix = "", decimals = 0 }: CounterProps) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  // Defer framer-motion infrastructure until the counter enters the viewport.
+  // All three counters sit below the fold, so creating motion infrastructure
+  // during initial hydration wastes main-thread work on animations that won't
+  // run until the user scrolls down.
+  if (!isInView) {
+    return <span ref={ref}>{value}{suffix}</span>;
+  }
+
+  return <AnimatedCounter value={value} suffix={suffix} decimals={decimals} />;
 };
 
 const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {

@@ -20,7 +20,7 @@ type ButtonProps = LinkButtonProps | NativeButtonProps;
 
 const variants: Record<ButtonVariant, string> = {
   primary: "bg-ink text-white hover:bg-accent",
-  secondary: "bg-accent-bright text-white hover:bg-accent-strong",
+  secondary: "bg-accent text-white hover:bg-accent-strong",
   outline: "border border-default text-ink hover:bg-surface",
   dark: "bg-ink text-white hover:bg-accent-strong",
 };
