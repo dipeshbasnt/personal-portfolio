@@ -63,7 +63,7 @@ const FeaturedWorkSection = () => (
               <h3 className="featured-project-title text-gray-900">
                 {featuredWorkContent.project.title}
               </h3>
-              <span className="featured-project-tags text-gray-500 text-xs font-semibold tracking-wider uppercase">
+              <span className="featured-project-tags text-muted text-xs font-semibold tracking-wider uppercase">
                 {featuredWorkContent.project.tags}
               </span>
             </div>

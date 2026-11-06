@@ -214,7 +214,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                       <span
                         className={cn(
                           "pt-2 font-mono text-xs tabular-nums transition-colors duration-300",
-                          isActive ? "text-red-500" : "text-slate-400"
+                          isActive ? "text-accent" : "text-slate-600"
                         )}
                       >
                         {pad(index + 1)}
@@ -227,7 +227,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                               "text-xl font-semibold tracking-tight transition-colors duration-300 sm:text-2xl",
                               isActive
                                 ? "text-slate-900"
-                                : "text-slate-400 group-hover:text-slate-700"
+                                : "text-slate-600 group-hover:text-slate-700"
                             )}
                           >
                             {feature.label}
@@ -255,7 +255,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                               className="block overflow-hidden"
                             >
-                              <span className="mt-1.5 block text-sm text-slate-500">
+                              <span className="mt-1.5 block text-sm text-slate-600">
                                 {feature.category}
                               </span>
 
@@ -303,7 +303,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                 >
                   {pad(currentIndex + 1)} / {pad(slideCount)}
                 </span>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-600">
                   {autoplay ? (paused ? "Paused" : "Auto play") : "Manual"}
                 </span>
               </div>
@@ -352,7 +352,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                     animate={{
                       x: isPrev ? -96 : isNext ? 96 : 0,
                       scale: isActive ? 1 : isPrev || isNext ? 0.86 : 0.74,
-                      opacity: isActive ? 1 : isPrev || isNext ? 0.35 : 0,
+                      opacity: isActive ? 1 : isPrev || isNext ? 0.6 : 0,
                       rotate: isPrev ? -4 : isNext ? 4 : 0,
                       zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
                       pointerEvents: isActive ? "auto" : "none",
@@ -415,13 +415,13 @@ function ServiceFace({
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white">
           <Icon size={22} strokeWidth={2} />
         </span>
-        <span className="font-mono text-xs tabular-nums text-slate-400">
+        <span className="font-mono text-xs tabular-nums text-ink">
           {pad(slide.localIndex + 1)} / {pad(total)}
         </span>
       </div>
 
       <div className="relative">
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-600">
           {slide.section.category}
         </p>
         <h3 className="text-2xl font-semibold leading-tight tracking-tight sm:text-[1.75rem]">
@@ -458,7 +458,7 @@ function StatementFace({ slide, isActive }: { slide: Slide; isActive: boolean })
       />
 
       <div className="relative flex items-start justify-between">
-        <span className="rounded-full border border-slate-900/15 px-3.5 py-1 text-xs font-medium uppercase tracking-[0.18em] text-slate-600">
+        <span className="rounded-full border border-slate-900/15 px-3.5 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink">
           {section.category}
         </span>
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-500 text-white">

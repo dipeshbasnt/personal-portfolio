@@ -29,7 +29,7 @@ export const sendContactEmail = inngestClient.createFunction(
     triggers: { event: "contact/email.send" },
   },
   async ({ event }: { event: { data: SendContactEmailData } }) => {
-    const { enquiryId, name, email, message, retryCount = 0 } = event.data;
+    const { enquiryId, name, email, message } = event.data;
 
     // Idempotency: check if the email was already sent for this enquiry.
     const { data: existing, error: fetchError } = await supabaseAdmin

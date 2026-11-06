@@ -21,12 +21,12 @@ const Footer = () => {
           {/* Brand & Copyright */}
           <div className="footer-brand-wrap flex flex-col items-center lg:items-start gap-2">
             <div className="flex items-center gap-3">
-              <Image alt="" className="h-10 w-10 shrink-0 object-contain" height={40} src="/logo.png" unoptimized width={40} />
+              <Image alt="" className="h-10 w-10 shrink-0 object-contain" height={40} src="/logo.svg" unoptimized width={40} />
               <span className="text-slate-950 text-xl font-bold tracking-tight">
                 {footerContent.brand}
               </span>
             </div>
-            <p className="text-gray-500 text-xs font-normal">
+            <p className="text-muted text-xs font-normal">
               {footerContent.copyright}
             </p>
           </div>

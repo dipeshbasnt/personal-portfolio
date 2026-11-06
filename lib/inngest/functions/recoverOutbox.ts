@@ -9,13 +9,6 @@ const supabaseAdmin = createSupabaseClient(
 
 const MAX_RETRIES = 5;
 
-type OutboxEntry = {
-  id: string;
-  enquiry_id: string;
-  email_status: string;
-  retry_count: number;
-};
-
 export const recoverOutbox = inngestClient.createFunction(
   {
     id: "recover-email-outbox",

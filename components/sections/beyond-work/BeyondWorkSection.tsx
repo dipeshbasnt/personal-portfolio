@@ -56,7 +56,7 @@ const WorkSection = () => {
                 >
                   {projectsContent.title}
                 </Heading>
-                <p className="work-summary text-gray-500 text-base leading-7 w-full max-w-[790px]">
+                <p className="work-summary text-muted text-base leading-7 w-full max-w-[790px]">
                   {projectsContent.summary}
                 </p>
               </div>
@@ -109,7 +109,7 @@ const WorkSection = () => {
                     <p className="work-card-description text-gray-900 text-base font-normal line-clamp-2">
                       {project.description}
                     </p>
-                    <span className="work-card-tags text-gray-500 text-xs font-semibold tracking-wider uppercase leading-5">
+                    <span className="work-card-tags text-muted text-xs font-semibold tracking-wider uppercase leading-5">
                       {project.tags}
                     </span>
                   </div>
@@ -169,7 +169,7 @@ const WorkSection = () => {
                 >
                   {selectedProject.title}
                 </h2>
-                <span className="work-card-tags text-gray-500 text-xs font-semibold tracking-wider uppercase mb-4 block">
+                <span className="work-card-tags text-muted text-xs font-semibold tracking-wider uppercase mb-4 block">
                   {selectedProject.tags}
                 </span>
                 <p className="text-slate-700 text-base leading-relaxed mb-6">

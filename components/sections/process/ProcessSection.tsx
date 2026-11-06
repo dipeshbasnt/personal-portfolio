@@ -137,7 +137,7 @@ const HowItWorksSection = () => {
                       {/* Step Number */}
                       <span
                         className={`font-mono text-xs font-medium transition-colors ${
-                          isActive ? "text-slate-950 font-bold" : "text-gray-500"
+                          isActive ? "text-slate-950 font-bold" : "text-ink"
                         }`}
                       >
                         {step.number}
@@ -148,7 +148,7 @@ const HowItWorksSection = () => {
                         className={`text-sm transition-colors whitespace-nowrap ${
                           isActive
                             ? "text-slate-950 font-semibold"
-                            : "text-gray-500 font-normal"
+                            : "text-ink font-normal"
                         }`}
                       >
                         {step.title}
@@ -191,7 +191,7 @@ const HowItWorksSection = () => {
                     <div className="flex-1 flex flex-col gap-4">
                       {/* Step Badge */}
                       <div className="inline-flex items-center justify-center w-fit px-3 py-1 bg-red-500/10 rounded-full border border-red-500/30">
-                        <span className="font-mono text-xs font-medium text-red-500">
+                        <span className="font-mono text-xs font-medium text-accent-strong">
                           {step.number}
                         </span>
                       </div>
@@ -209,7 +209,7 @@ const HowItWorksSection = () => {
                         {step.tags.map((tag) => (
                           <div
                             key={tag}
-                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 rounded-xl border border-stone-300 text-gray-500 text-xs font-normal"
+                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 rounded-xl border border-stone-300 text-muted text-xs font-normal"
                           >
                             <Check className="w-3.5 h-3.5 text-red-500" />
                             <span>{tag}</span>
