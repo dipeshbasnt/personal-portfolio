@@ -43,13 +43,20 @@ export const recoverOutbox = inngestClient.createFunction(
         .eq("id", entry.id);
 
       // Re-enqueue the email sending event.
-      await inngestClient.send({
-        name: "contact/email.send",
-        data: {
-          enquiryId: entry.enquiry_id,
-          retryCount: entry.retry_count,
-        },
-      });
+      try {
+        await inngestClient.send({
+          name: "contact/email.send",
+          data: {
+            enquiryId: entry.enquiry_id,
+            retryCount: entry.retry_count,
+          },
+        });
+      } catch (sendError) {
+        console.error(
+          `Failed to re-enqueue email for outbox entry ${entry.id}:`,
+          sendError instanceof Error ? sendError.message : String(sendError)
+        );
+      }
     }
 
     return {
