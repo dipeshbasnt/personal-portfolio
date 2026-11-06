@@ -21,6 +21,13 @@ export const metadata: Metadata = {
       "The portfolio of RabbitTheDesigner, blending thoughtful digital design with responsive frontend development.",
     type: "website",
   },
+  icons: [
+    {
+      rel: "icon",
+      type: "image/svg+xml",
+      url: "/logo.svg",
+    },
+  ],
 };
 
 const RootLayout = ({ children }: LayoutProps<"/">) => (
