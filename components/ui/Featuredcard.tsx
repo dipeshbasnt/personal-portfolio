@@ -177,6 +177,154 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
     return "hidden";
   };
 
+  // Render navigation step items (shared between mobile grid and desktop list)
+  const renderNavItem = (
+    feature: SectionFeatureItem,
+    index: number,
+    variant: "mobile" | "desktop"
+  ) => {
+    const isActive = index === current.sectionIndex;
+    const total = slideCountBySection[index];
+    const Icon = feature.icon;
+    const isMobile = variant === "mobile";
+
+    return (
+      <li key={feature.id} className="border-t border-slate-900/10 first:border-t-0">
+        <button
+          type="button"
+          onClick={() => handleSelect(index)}
+          aria-current={isActive ? "true" : undefined}
+          className={cn(
+            "group rounded-xl py-3 px-3 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2",
+            isMobile
+              ? "flex flex-col items-center gap-2 text-center"
+              : "flex w-full items-start gap-5 py-5 text-left"
+          )}
+        >
+          <span
+            className={cn(
+              isMobile
+                ? "font-mono text-xs tabular-nums transition-colors duration-300"
+                : "pt-2 font-mono text-xs tabular-nums transition-colors duration-300",
+              isActive ? "text-accent" : "text-slate-600"
+            )}
+          >
+            {pad(index + 1)}
+          </span>
+
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center justify-between gap-4">
+              <span
+                className={cn(
+                  isMobile
+                    ? "text-sm font-semibold tracking-tight transition-colors duration-300"
+                    : "text-xl font-semibold tracking-tight transition-colors duration-300 sm:text-2xl",
+                  isActive
+                    ? "text-slate-900"
+                    : "text-slate-600 group-hover:text-slate-700"
+                )}
+              >
+                {feature.label}
+              </span>
+              <Icon
+                size={isMobile ? 16 : 20}
+                strokeWidth={1.75}
+                className={cn(
+                  "shrink-0 transition-[color,transform] duration-300 motion-reduce:transition-none",
+                  isMobile ? "duration-300" : "duration-500",
+                  feature.id === "my-journey" &&
+                    isMobile
+                      ? "group-hover:rotate-45 group-hover:scale-105 group-focus-visible:rotate-45 group-focus-visible:scale-105"
+                      : feature.id === "my-journey" &&
+                        "group-hover:rotate-45 group-hover:scale-110 group-focus-visible:rotate-45 group-focus-visible:scale-110",
+                  isActive
+                    ? "text-red-500"
+                    : "text-slate-300 group-hover:text-slate-500"
+                )}
+              />
+            </span>
+
+            <AnimatePresence initial={false}>
+              {isActive && (
+                <motion.span
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className="block overflow-hidden"
+                >
+                  <span className="mt-1.5 block text-sm text-slate-600">
+                    {feature.category}
+                  </span>
+
+                  {/* progress: one segment per slide in this section */}
+                  <span aria-hidden className="mt-4 flex max-w-xs gap-1.5">
+                    {Array.from({ length: total }).map((_, i) => {
+                      const done = i < current.localIndex;
+                      const live = i === current.localIndex;
+                      return (
+                        <span
+                          key={i}
+                          className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-slate-900/10"
+                        >
+                          {done && (
+                            <span className="absolute inset-0 bg-red-500" />
+                          )}
+                          {live && (
+                            <motion.span
+                              className="absolute inset-y-0 left-0 origin-left bg-red-500"
+                              style={{ scaleX: autoplay ? progress : 1 }}
+                            />
+                          )}
+                        </span>
+                      );
+                    })}
+                  </span>
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </span>
+        </button>
+      </li>
+    );
+  };
+
+  // Render slides (shared between mobile and desktop stages)
+  const renderSlide = (slide: Slide) => {
+    const status = getStatus(slides.indexOf(slide));
+    const isActive = status === "active";
+    const isPrev = status === "prev";
+    const isNext = status === "next";
+
+    return (
+      <motion.div
+        key={slide.key}
+        aria-hidden={!isActive}
+        initial={false}
+        animate={{
+          x: isPrev ? -48 : isNext ? 48 : 0,
+          scale: isActive ? 1 : isPrev || isNext ? 0.9 : 0.8,
+          opacity: isActive ? 1 : isPrev || isNext ? 0.4 : 0,
+          rotate: isPrev ? -4 : isNext ? 4 : 0,
+          zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
+          pointerEvents: isActive ? "auto" : "none",
+        }}
+        transition={{ type: "spring", stiffness: 240, damping: 26, mass: 0.8 }}
+        className="absolute inset-0 origin-center overflow-hidden rounded-[1.75rem] bg-[#F7F3EC] border border-stone-200/50 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] ring-1 ring-white/10"
+      >
+        {slide.card ? (
+          <ServiceFace
+            slide={slide}
+            total={slideCountBySection[slide.sectionIndex]}
+            isActive={isActive}
+          />
+        ) : (
+          <StatementFace slide={slide} isActive={isActive} />
+        )}
+      </motion.div>
+    );
+  };
+
   return (
     <MotionConfig reducedMotion="user">
       <div
@@ -191,109 +339,78 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
           }
         }}
       >
-        <div className="grid overflow-hidden lg:min-h-[560px] lg:grid-cols-[5fr_6fr]">
-          {/* ------------------ Left: index ------------------ */}
-          <div className="flex flex-col justify-center px-6 py-8 sm:px-10 sm:py-12 lg:px-14">
-            <ul className="flex flex-col">
-              {features.map((feature, index) => {
-                const isActive = index === current.sectionIndex;
-                const total = slideCountBySection[index];
-                const Icon = feature.icon;
-
-                return (
-                  <li
-                    key={feature.id}
-                    className="border-t border-slate-900/10 first:border-t-0"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleSelect(index)}
-                      aria-current={isActive ? "true" : undefined}
-                      className="group flex w-full items-start gap-5 rounded-lg py-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-                    >
-                      <span
-                        className={cn(
-                          "pt-2 font-mono text-xs tabular-nums transition-colors duration-300",
-                          isActive ? "text-accent" : "text-slate-600"
-                        )}
-                      >
-                        {pad(index + 1)}
-                      </span>
-
-                      <span className="min-w-0 flex-1">
-                        <span className="flex items-center justify-between gap-4">
-                          <span
-                            className={cn(
-                              "text-xl font-semibold tracking-tight transition-colors duration-300 sm:text-2xl",
-                              isActive
-                                ? "text-slate-900"
-                                : "text-slate-600 group-hover:text-slate-700"
-                            )}
-                          >
-                            {feature.label}
-                          </span>
-                          <Icon
-                            size={20}
-                            strokeWidth={1.75}
-                            className={cn(
-                              "shrink-0 transition-[color,transform] duration-500 motion-reduce:transition-none",
-                              feature.id === "my-journey" &&
-                                "group-hover:rotate-45 group-hover:scale-110 group-focus-visible:rotate-45 group-focus-visible:scale-110",
-                              isActive
-                                ? "text-red-500"
-                                : "text-slate-300 group-hover:text-slate-500"
-                            )}
-                          />
-                        </span>
-
-                        <AnimatePresence initial={false}>
-                          {isActive && (
-                            <motion.span
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                              className="block overflow-hidden"
-                            >
-                              <span className="mt-1.5 block text-sm text-slate-600">
-                                {feature.category}
-                              </span>
-
-                              {/* progress: one segment per slide in this section */}
-                              <span aria-hidden className="mt-4 flex max-w-xs gap-1.5">
-                                {Array.from({ length: total }).map((_, i) => {
-                                  const done = i < current.localIndex;
-                                  const live = i === current.localIndex;
-                                  return (
-                                    <span
-                                      key={i}
-                                      className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-slate-900/10"
-                                    >
-                                      {done && (
-                                        <span className="absolute inset-0 bg-red-500" />
-                                      )}
-                                      {live && (
-                                        <motion.span
-                                          className="absolute inset-y-0 left-0 origin-left bg-red-500"
-                                          style={{ scaleX: autoplay ? progress : 1 }}
-                                        />
-                                      )}
-                                    </span>
-                                  );
-                                })}
-                              </span>
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
+        {/* ------------------ Mobile: stacked layout ------------------ */}
+        <div className="lg:hidden overflow-hidden">
+          {/* Mobile: 2x2 step navigation grid */}
+          <div className="px-4 sm:px-6 py-6">
+            <ul className="grid grid-cols-2 gap-4">
+              {features.map((feature, index) => renderNavItem(feature, index, "mobile"))}
             </ul>
           </div>
 
-          {/* ------------------ Right: stage ------------------ */}
+          {/* Mobile: controls above card */}
+          <div className="px-4 sm:px-6 py-6">
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <div className="flex min-w-0 items-center gap-2">
+                <span
+                  aria-label={`Slide ${currentIndex + 1} of ${slideCount}`}
+                  className="font-mono text-xs tabular-nums text-slate-700"
+                >
+                  {pad(currentIndex + 1)} / {pad(slideCount)}
+                </span>
+                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-600">
+                  {autoplay ? (paused ? "Paused" : "Auto play") : "Manual"}
+                </span>
+              </div>
+              <div aria-label="Carousel controls" className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handlePrevious}
+                  aria-label="Previous slide"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/20 text-slate-700 transition hover:bg-slate-900/5 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+                >
+                  <ChevronLeft aria-hidden="true" size={17} />
+                </button>
+                {autoplay && (
+                  <button
+                    type="button"
+                    onClick={() => setUserPaused((p) => !p)}
+                    aria-label={userPaused ? "Play slideshow" : "Pause slideshow"}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/20 text-slate-700 transition hover:bg-slate-900/5 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+                  >
+                    {userPaused ? <Play size={14} /> : <Pause size={14} />}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  aria-label="Next slide"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/20 text-slate-700 transition hover:bg-slate-900/5 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+                >
+                  <ChevronRight aria-hidden="true" size={17} />
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile: full-width active card */}
+            <div className="relative aspect-[4/5] w-full max-w-[340px] mx-auto">
+              {slides.map(renderSlide)}
+            </div>
+          </div>
+        </div>
+
+        {/* ------------------ Desktop: side-by-side layout ------------------ */}
+        <div className="hidden lg:flex lg:grid lg:grid-cols-[5fr_6fr] lg:min-h-[560px] lg:overflow-hidden">
+          {/* Left: index (desktop vertical column) */}
+          <div className="flex flex-col justify-center px-6 py-8 sm:px-10 sm:py-12 lg:px-14">
+            <ul className="flex flex-col">
+              {features.map((feature, index) =>
+                renderNavItem(feature, index, "desktop")
+              )}
+            </ul>
+          </div>
+
+          {/* Right: stage */}
           <div className="relative flex min-h-[480px] items-center justify-center overflow-hidden px-4 py-16 sm:min-h-[520px] sm:px-6 lg:min-h-0 lg:py-16">
             <div className="absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-3 px-6 pt-5 sm:px-8">
               <div className="flex min-w-0 items-center gap-3">
@@ -317,14 +434,14 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
                   <ChevronLeft aria-hidden="true" size={17} />
                 </button>
                 {autoplay && (
-                <button
-                  type="button"
-                  onClick={() => setUserPaused((p) => !p)}
-                  aria-label={userPaused ? "Play slideshow" : "Pause slideshow"}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/20 text-slate-700 transition hover:bg-slate-900/5 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
-                >
-                  {userPaused ? <Play size={14} /> : <Pause size={14} />}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserPaused((p) => !p)}
+                    aria-label={userPaused ? "Play slideshow" : "Pause slideshow"}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/20 text-slate-700 transition hover:bg-slate-900/5 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+                  >
+                    {userPaused ? <Play size={14} /> : <Pause size={14} />}
+                  </button>
                 )}
                 <button
                   type="button"
@@ -338,40 +455,7 @@ export function FeatureCarousel({ features }: { features: SectionFeatureItem[] }
             </div>
 
             <div className="relative aspect-[4/5] w-full max-w-[340px]">
-              {slides.map((slide, index) => {
-                const status = getStatus(index);
-                const isActive = status === "active";
-                const isPrev = status === "prev";
-                const isNext = status === "next";
-
-                return (
-                  <motion.div
-                    key={slide.key}
-                    aria-hidden={!isActive}
-                    initial={false}
-                    animate={{
-                      x: isPrev ? -96 : isNext ? 96 : 0,
-                      scale: isActive ? 1 : isPrev || isNext ? 0.86 : 0.74,
-                      opacity: isActive ? 1 : isPrev || isNext ? 0.6 : 0,
-                      rotate: isPrev ? -4 : isNext ? 4 : 0,
-                      zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
-                      pointerEvents: isActive ? "auto" : "none",
-                    }}
-                    transition={{ type: "spring", stiffness: 240, damping: 26, mass: 0.8 }}
-                    className="absolute inset-0 origin-center overflow-hidden rounded-[1.75rem] bg-[#F7F3EC] border border-stone-200/50 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] ring-1 ring-white/10"
-                  >
-                    {slide.card ? (
-                      <ServiceFace
-                        slide={slide}
-                        total={slideCountBySection[slide.sectionIndex]}
-                        isActive={isActive}
-                      />
-                    ) : (
-                      <StatementFace slide={slide} isActive={isActive} />
-                    )}
-                  </motion.div>
-                );
-              })}
+              {slides.map(renderSlide)}
             </div>
           </div>
         </div>

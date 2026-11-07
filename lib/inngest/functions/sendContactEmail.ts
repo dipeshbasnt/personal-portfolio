@@ -12,7 +12,7 @@ const supabaseAdmin = createSupabaseClient(
 );
 
 const EMAIL_TO = process.env.EMAIL_TO ?? "hello@rabbitthedesigner.com";
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "onboarding@resend.dev";
+const EMAIL_FROM = process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
 
 type SendContactEmailData = {
   enquiryId: string;
@@ -47,9 +47,13 @@ export const sendContactEmail = inngestClient.createFunction(
       return { status: "skipped", reason: "already_sent", enquiryId };
     }
 
+    console.log("sendContactEmail function started:", { enquiryId, name, email, message: message?.slice(0, 50) });
+
     let emailError: Error | null = null;
 
     const resend = new Resend(process.env.RESEND_API_KEY);
+
+    console.log("Resend client initialized, sending email to:", EMAIL_TO, "from:", EMAIL_FROM);
 
     try {
       await resend.emails.send({
@@ -62,6 +66,7 @@ export const sendContactEmail = inngestClient.createFunction(
 <p><strong>Email:</strong> ${email}</p>
 <p>${message}</p>`,
       });
+      console.log("Email sent successfully via Resend:", { enquiryId });
     } catch (error) {
       emailError =
         error instanceof Error ? error : new Error(String(error));
