@@ -112,118 +112,108 @@ const ContactSection = () => {
               className="contact-form relative p-6 sm:p-8 bg-stone-100 rounded-2xl border border-stone-300 flex flex-col justify-between gap-6"
               onSubmit={handleSubmit}
             >
-              <div className="flex flex-col gap-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Name Input */}
-                  <div className="flex flex-col gap-2">
-                    <FloatInput
-                      error={errors.name}
-                      label={contactContent.fields.nameLabel}
-                      placeholder={contactContent.fields.namePlaceholder}
-                      value={formData.name}
-                      onChange={(value) =>
-                        setFormData({ ...formData, name: value })
-                      }
-                    />
-                    {errors.name ? (
-                      <span className="text-sm text-red-500" role="alert">
-                        {errors.name}
-                      </span>
-                    ) : null}
-                  </div>
+              {!isModalOpen ? (
+                <>
+                  <div className="flex flex-col gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {/* Name Input */}
+                      <div className="flex flex-col gap-2">
+                        <FloatInput
+                          error={errors.name}
+                          label={contactContent.fields.nameLabel}
+                          placeholder={contactContent.fields.namePlaceholder}
+                          value={formData.name}
+                          onChange={(value) =>
+                            setFormData({ ...formData, name: value })
+                          }
+                        />
+                        {errors.name ? (
+                          <span className="text-sm text-red-500" role="alert">
+                            {errors.name}
+                          </span>
+                        ) : null}
+                      </div>
 
-                  {/* Email Input */}
-                  <div className="flex flex-col gap-2">
-                    <FloatInput
-                      error={errors.email}
-                      label={contactContent.fields.emailLabel}
-                      placeholder={contactContent.fields.emailPlaceholder}
-                      value={formData.email}
-                      onChange={(value) =>
-                        setFormData({ ...formData, email: value })
-                      }
-                    />
-                    {errors.email ? (
-                      <span className="text-sm text-red-500" role="alert">
-                        {errors.email}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                {/* Message Textarea */}
-                <div className="flex flex-col gap-2">
-                  <label
-                    className="text-slate-950 text-base font-normal"
-                    htmlFor="contact-message"
-                  >
-                    {contactContent.fields.messageLabel}
-                  </label>
-                  <textarea
-                    aria-invalid={errors.message ? true : undefined}
-                    className="w-full min-h-[130px] px-4 py-2 bg-white rounded-lg border border-stone-300 text-slate-950 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-950 transition-all resize-y"
-                    id="contact-message"
-                    name="message"
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                    placeholder={contactContent.fields.messagePlaceholder}
-                    value={formData.message}
-                  />
-                  {errors.message ? (
-                    <span className="text-sm text-red-500" role="alert">
-                      {errors.message}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div>
-                {submitError ? (
-                  <p className="mb-4 text-sm text-red-500 text-center" role="alert">
-                    {submitError}
-                  </p>
-                ) : null}
-                <button
-                  className="px-6 py-3.5 bg-slate-950 hover:bg-slate-800 text-white text-base font-medium tracking-wide rounded-full shadow-[0px_6px_16px_0px_rgba(7,17,31,0.12)] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-                  disabled={isSubmitting || isModalOpen}
-                  type="submit"
-                >
-                  {isSubmitting ? "Sending..." : contactContent.submitLabel}
-                </button>
-              </div>
-              {isModalOpen && (
-                <div
-                  className="absolute top-0 right-0 w-72 max-w-[calc(100vw-24px)] bg-white border border-stone-200 rounded-xl shadow-lg p-4 z-[60]"
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label="Message sent"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-red-50">
-                      <CheckCircle2 size={16} strokeWidth={2} className="text-red-600" aria-hidden="true" />
+                      {/* Email Input */}
+                      <div className="flex flex-col gap-2">
+                        <FloatInput
+                          error={errors.email}
+                          label={contactContent.fields.emailLabel}
+                          placeholder={contactContent.fields.emailPlaceholder}
+                          value={formData.email}
+                          onChange={(value) =>
+                            setFormData({ ...formData, email: value })
+                          }
+                        />
+                        {errors.email ? (
+                          <span className="text-sm text-red-500" role="alert">
+                            {errors.email}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-stone-900">
-                        Message Sent ✨
-                      </p>
-                      <p className="mt-0.5 text-xs leading-relaxed text-stone-500">
-                        Thanks for reaching out! I’ve received your message and will get back to you shortly.
-                      </p>
+
+                    {/* Message Textarea */}
+                    <div className="flex flex-col gap-2">
+                      <label
+                        className="text-slate-950 text-base font-normal"
+                        htmlFor="contact-message"
+                      >
+                        {contactContent.fields.messageLabel}
+                      </label>
+                      <textarea
+                        aria-invalid={errors.message ? true : undefined}
+                        className="w-full min-h-[130px] px-4 py-2 bg-white rounded-lg border border-stone-300 text-slate-950 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-950 transition-all resize-y"
+                        id="contact-message"
+                        name="message"
+                        onChange={(e) =>
+                          setFormData({ ...formData, message: e.target.value })
+                        }
+                        placeholder={contactContent.fields.messagePlaceholder}
+                        value={formData.message}
+                      />
+                      {errors.message ? (
+                        <span className="text-sm text-red-500" role="alert">
+                          {errors.message}
+                        </span>
+                      ) : null}
                     </div>
                   </div>
 
-                  <div className="mt-4 flex gap-2">
+                  {/* Submit Button */}
+                  <div>
+                    {submitError ? (
+                      <p className="mb-4 text-sm text-red-500 text-center" role="alert">
+                        {submitError}
+                      </p>
+                    ) : null}
                     <button
-                      onClick={() => {
-                        setIsModalOpen(false);
-                      }}
-                      className="flex-1 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400"
+                      className="px-6 py-3.5 bg-slate-950 hover:bg-slate-800 text-white text-base font-medium tracking-wide rounded-full shadow-[0px_6px_16px_0px_rgba(7,17,31,0.12)] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                      disabled={isSubmitting || isModalOpen}
+                      type="submit"
                     >
-                      Close
+                      {isSubmitting ? "Sending..." : contactContent.submitLabel}
                     </button>
                   </div>
+                </>
+              ) : (
+                /* Success state */
+                <div className="flex flex-col items-center justify-center text-center py-6 animate-in fade-in slide-in-from-top-1">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-red-50">
+                    <CheckCircle2 size={16} strokeWidth={2} className="text-red-600" aria-hidden="true" />
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-stone-900">
+                    Message Sent ✨
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-stone-500 max-w-xs text-center">
+                    Thanks for reaching out! I’ve received your message and will get back to you shortly.
+                  </p>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="mt-4 px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-100 rounded-md transition-colors"
+                  >
+                    Send another message
+                  </button>
                 </div>
               )}
             </form>

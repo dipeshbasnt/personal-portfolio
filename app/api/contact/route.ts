@@ -122,6 +122,7 @@ export async function POST(request: Request) {
   let enqueueError: Error | null = null;
   if (enquiryId) {
     try {
+      console.log("Enqueuing Inngest email job:", { enquiryId, name, email });
       await inngestClient.send({
         name: "contact/email.send",
         data: {
@@ -131,9 +132,10 @@ export async function POST(request: Request) {
           message,
         },
       });
+      console.log("Inngest email job enqueued successfully:", { enquiryId });
     } catch (error) {
       enqueueError = error instanceof Error ? error : new Error(String(error));
-      console.error("Failed to enqueue Inngest email job:", enqueueError);
+      console.error("Failed to enqueue Inngest email job:", enqueueError?.message ?? enqueueError);
 
       // Outbox pattern: persist the delivery request so it can be recovered later.
       try {
