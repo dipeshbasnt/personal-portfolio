@@ -77,7 +77,7 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
           whileInView={{ opacity: 1, y: 0 }}
         >
           {/* Column 1 — Completed projects */}
-          <div className="flex-1 flex flex-col items-center text-center p-10 md:py-16 group hover:bg-gray-50/40 transition-colors duration-300 border-b md:border-b-0 md:border-r border-gray-100">
+          <div className="flex-1 flex flex-col items-center text-center pt-20 px-10 pb-10 md:py-16 min-h-[220px] group hover:bg-gray-50/40 transition-colors duration-300 border-b md:border-b-0 md:border-r border-gray-100">
             <div
               aria-hidden="true"
               className="mb-7 flex h-12 w-12 items-center justify-center rounded-full bg-[#f5f2ea] text-[#111110] transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6 motion-reduce:transition-none"
@@ -85,9 +85,11 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
               <Briefcase aria-hidden="true" className={iconClassName} strokeWidth={1.8} />
             </div>
 
-            <h2 className="text-[44px] font-medium text-[#111110] leading-none mb-3.5 font-sans tracking-tight">
-              <Counter decimals={col1.decimals} suffix={col1.suffix} value={col1.value} />
-            </h2>
+            <div className="min-w-[60px] mt-6">
+              <h2 className="text-[44px] font-medium text-[#111110] leading-none mb-3.5 font-sans tracking-tight">
+                <Counter decimals={col1.decimals} suffix={col1.suffix} value={col1.value} />
+              </h2>
+            </div>
 
             <p className={`text-[17px] leading-[1.6] ${col1.maxWidth} text-gray-400 font-sans`}>
               {col1.caption.line1}
@@ -100,7 +102,7 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
           </div>
 
           {/* Column 2 — Years learning and building */}
-          <div className="flex-1 flex flex-col items-center text-center p-10 md:py-16 group hover:bg-gray-50/40 transition-colors duration-300 border-b md:border-b-0 md:border-r border-gray-100">
+          <div className="flex-1 flex flex-col items-center text-center pt-20 px-10 pb-10 md:py-16 min-h-[220px] group hover:bg-gray-50/40 transition-colors duration-300 border-b md:border-b-0 md:border-r border-gray-100">
             <div
               aria-hidden="true"
               className="mb-7 flex h-12 w-12 items-center justify-center rounded-full bg-[#f5f2ea] text-[#111110] transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6 motion-reduce:transition-none"
@@ -108,9 +110,11 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
               <Code2 aria-hidden="true" className={iconClassName} strokeWidth={1.8} />
             </div>
 
-            <h2 className="text-[44px] font-medium text-[#111110] leading-none mb-3.5 font-sans tracking-tight">
-              <Counter decimals={col2.decimals} suffix={col2.suffix} value={col2.value} />
-            </h2>
+            <div className="min-w-[60px] mt-6">
+              <h2 className="text-[44px] font-medium text-[#111110] leading-none mb-3.5 font-sans tracking-tight">
+                <Counter decimals={col2.decimals} suffix={col2.suffix} value={col2.value} />
+              </h2>
+            </div>
 
             <p className={`text-[17px] leading-[1.6] ${col2.maxWidth} text-gray-400 font-sans`}>
               {col2.caption.line1}
@@ -123,7 +127,7 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
           </div>
 
           {/* Column 3 — Technologies and tools */}
-          <div className="flex-1 flex flex-col items-center text-center p-10 md:py-16 group hover:bg-gray-50/40 transition-colors duration-300">
+          <div className="flex-1 flex flex-col items-center text-center pt-20 px-10 pb-10 md:py-16 min-h-[220px] group hover:bg-gray-50/40 transition-colors duration-300">
             <div
               aria-hidden="true"
               className="mb-7 flex h-12 w-12 items-center justify-center rounded-full bg-[#f5f2ea] text-[#111110] transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6 motion-reduce:transition-none"
@@ -131,9 +135,11 @@ const MetricsVendo = ({ className = "" }: MetricsVendoProps) => {
               <Layers aria-hidden="true" className={iconClassName} strokeWidth={1.8} />
             </div>
 
-            <h2 className="text-[44px] font-medium text-[#111110] leading-none mb-3.5 font-sans tracking-tight">
-              <Counter decimals={col3.decimals} suffix={col3.suffix} value={col3.value} />
-            </h2>
+            <div className="min-w-[60px] mt-6">
+              <h2 className="text-[44px] font-medium text-[#111110] leading-none mb-3.5 font-sans tracking-tight">
+                <Counter decimals={col3.decimals} suffix={col3.suffix} value={col3.value} />
+              </h2>
+            </div>
 
             <p className={`text-[17px] leading-[1.6] ${col3.maxWidth} font-sans`}>
               {col3.caption.line1}

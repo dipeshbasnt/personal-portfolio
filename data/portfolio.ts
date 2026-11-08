@@ -105,8 +105,7 @@ export const services = [
     title: "Brand Identity & Design System",
     description:
       "Creating a consistent visual foundation through logo direction, color, typography, guidelines, and reusable design assets.",
-    image:
-      "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=900&auto=format&fit=crop&q=85",
+    image: "/images/services/brand-design.webp",
     imageAlt: "Vivid color and ink study for visual identity exploration",
   },
   {
@@ -114,8 +113,7 @@ export const services = [
     title: "UI/UX Design",
     description:
       "Designing clear user flows, wireframes, high-fidelity interfaces, prototypes, and scalable component systems in Figma.",
-    image:
-      "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=900&auto=format&fit=crop&q=85",
+    image: "/images/services/ui-design.webp",
     imageAlt: "Interface sketches on a tablet during a product design session",
   },
   {
@@ -123,8 +121,7 @@ export const services = [
     title: "React Frontend Development",
     description:
       "Turning Figma designs into responsive, reusable, production-ready React and Next.js interfaces.",
-    image:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=900&auto=format&fit=crop&q=85",
+    image: "/images/services/frontend-dev.webp",
     imageAlt: "Laptop displaying code in a bright development workspace",
   },
 ] as const;
@@ -231,8 +228,7 @@ export const howItWorksContent = {
         "Every project begins with understanding the product, defining requirements, identifying the target users, and documenting the scope before any design starts.",
       tags: ["Project Brief", "Goals", "Targeted User"],
       align: "right",
-      imageSrc:
-        "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&auto=format&fit=crop&q=85",
+      imageSrc: "/images/services/project-brief.webp",
       imageAlt: "Project brief contract and scope document review",
     },
     {
@@ -281,8 +277,7 @@ export const howItWorksContent = {
         "I explore layouts, navigation, and content hierarchy with low-fidelity wireframes before moving into visual design.",
       tags: ["Low-fidelity", "Layout", "Hierarchy"],
       align: "right",
-      imageSrc:
-        "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=900&auto=format&fit=crop&q=85",
+      imageSrc: "/images/services/ui-design.webp",
       imageAlt: "Low-fidelity wireframe sketches on tablet",
     },
     {
