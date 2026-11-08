@@ -73,13 +73,13 @@ const AboutSection = () => (
               </div>
             </div>
 
-            <div className="about-portrait-column">
-              <div className="about-portrait-card">
+            <div className="about-portrait-column max-w-full">
+              <div className="about-portrait-card overflow-hidden">
                 <div className="about-portrait-placeholder">
                   <ScrollImageReveal
                     alt={aboutContent.portraitAlt}
                     src={aboutContent.portraitImage}
-                    sizes="(max-width: 768px) 100vw, 40vw"
+                    sizes="(max-width: 768px) calc(100vw - 2rem), 40vw"
                     mask="circle"
                     direction="left"
                     className="w-full h-full"
